@@ -1,0 +1,23 @@
+local lspconfig = require("lspconfig")
+
+local python_path = "/home/takemurark/hydro_fw_controller/.venv/bin/python"
+vim.g.python3_host_prog = python_path
+
+lspconfig.pyright.setup({
+  on_attach = function(client, bufnr)
+    vim.api.nvim_buf_create_user_command(bufnr, "Format", function()
+      vim.lsp.buf.format({ async = true })
+    end, {})
+    vim.cmd("autocmd BufWritePre <buffer> lua vim.lsp.buf.format()")
+  end,
+  before_init = function(params, config)
+    config.settings.python.pythonPath = python_path
+  end,
+})
+
+-- カーソル停止時の診断表示
+vim.api.nvim_create_autocmd("CursorHold", {
+  callback = function()
+    vim.diagnostic.open_float(nil, { focus = false })
+  end
+})
