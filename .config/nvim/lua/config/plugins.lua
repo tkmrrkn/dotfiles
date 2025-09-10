@@ -27,5 +27,14 @@ require("lazy").setup({
   "theHamsta/nvim-dap-virtual-text",
   "nvim-neotest/nvim-nio",
   "tpope/vim-fugitive",
-  "lewis6991/gitsigns.nvim"
+  "lewis6991/gitsigns.nvim",
+  
+  {
+    "folke/tokyonight.nvim",
+    lazy = false,
+    priority = 1000,
+    config = function()
+      vim.cmd("colorscheme tokyonight")
+    end,
+  },
 })
