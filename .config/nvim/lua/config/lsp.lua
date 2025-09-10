@@ -1,7 +1,5 @@
 local lspconfig = require("lspconfig")
-
-local python_path = "/home/takemurark/hydro_fw_controller/.venv/bin/python"
-vim.g.python3_host_prog = python_path
+local python = require("config.python")
 
 lspconfig.pyright.setup({
   on_attach = function(client, bufnr)
@@ -11,7 +9,7 @@ lspconfig.pyright.setup({
     vim.cmd("autocmd BufWritePre <buffer> lua vim.lsp.buf.format()")
   end,
   before_init = function(params, config)
-    config.settings.python.pythonPath = python_path
+    config.settings.python.pythonPath = python.get_python_path()
   end,
 })
 

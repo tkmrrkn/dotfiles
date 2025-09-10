@@ -1,11 +1,10 @@
 local dap = require("dap")
 local dapui = require("dapui")
-
-local python_path = "/home/takemurark/hydro_fw_controller/.venv/bin/python"
+local python = require("config.python")
 
 dap.adapters.python = {
   type = 'executable',
-  command = python_path,
+  command = python.get_python_path(),
   args = { '-m', 'debugpy.adapter' },
 }
 
@@ -16,7 +15,7 @@ dap.configurations.python = {
     name = "Launch file",
     program = "${file}",
     pythonPath = function()
-      return python_path
+      return python.get_python_path()
     end,
   },
 }
