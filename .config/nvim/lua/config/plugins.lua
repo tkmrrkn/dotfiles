@@ -26,9 +26,8 @@ require("lazy").setup({
   "rcarriga/nvim-dap-ui",
   "theHamsta/nvim-dap-virtual-text",
   "nvim-neotest/nvim-nio",
-  "tpope/vim-fugitive",
   "lewis6991/gitsigns.nvim",
-  
+
   {
     "folke/tokyonight.nvim",
     lazy = false,
