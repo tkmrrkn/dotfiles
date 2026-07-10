@@ -1,0 +1,77 @@
+# dotfiles
+
+## 構成
+
+```
+dotfiles/
+├── wezterm/
+│   └── .wezterm.lua        # WezTerm 設定（pwsh 既定・kanagawa 配色・透過トグル・Nerd Font）
+├── nvim/                   # Neovim 設定（→ %LOCALAPPDATA%\nvim に symlink）
+│   ├── init.lua            # 司令塔（config/* を読み込むだけ）
+│   ├── lazy-lock.json      # プラグインのバージョン固定
+│   └── lua/
+│       ├── config/
+│       │   ├── options.lua # エディタ基本設定
+│       │   ├── keymaps.lua # キーマップ（LSP の LspAttach 含む）
+│       │   └── lazy.lua    # lazy.nvim ブートストラップ
+│       └── plugins/        # プラグイン定義（1ファイル1プラグイン）
+│           ├── kanagawa.lua    # 配色
+│           ├── which-key.lua   # キー補助ポップアップ
+│           ├── lualine.lua     # ステータスライン
+│           ├── telescope.lua   # ファジー検索
+│           ├── gitsigns.lua    # git 差分表示
+│           ├── fugitive.lua    # git 操作
+│           ├── oil.lua         # ファイラ
+│           ├── mason.lua       # LSP サーバー管理
+│           ├── lsp.lua         # mason-lspconfig + lspconfig（lua_ls）
+│           ├── blink.lua       # 補完エンジン
+│           └── lazydev.lua     # Neovim Lua 開発支援
+├── powershell/
+│   └── Microsoft.PowerShell_profile.ps1  # PowerShell プロファイル（zoxide 初期化）→ $PROFILE に symlink
+├── winget/
+│   └── install.ps1        # winget で入れるツール一式
+└── npm/
+    └── install.ps1        # npm グローバルパッケージ
+```
+
+## 導入の仕方
+
+### 1. ツールを入れる
+
+```powershell
+# 主要ツール
+#   WezTerm / Neovim / PowerShell / ripgrep / Nerd Font /
+#   Git / GitHub CLI(gh) / ghq / Node.js / zoxide
+./winget/install.ps1
+
+# npm グローバル（Node.js インストール後に）
+./npm/install.ps1
+```
+
+### 2. 開発者モードを有効化
+
+symlink 作成に必要。
+設定 → プライバシーとセキュリティ → 開発者向け → 「開発者モード」をオン。
+（オンにするのは symlink を張る間だけでよい。管理者権限の pwsh で代用も可）
+
+### 3. リポジトリを取得
+
+```powershell
+git clone https://github.com/tkmrrkn/dotfiles.git "$HOME\dotfiles"
+```
+
+### 4. symlink を張る
+
+```powershell
+# WezTerm
+New-Item -ItemType SymbolicLink -Path "$HOME\.wezterm.lua" -Target "$HOME\dotfiles\wezterm\.wezterm.lua"
+
+# Neovim
+New-Item -ItemType SymbolicLink -Path "$env:LOCALAPPDATA\nvim" -Target "$HOME\dotfiles\nvim"
+
+# PowerShell プロファイル（親フォルダが無ければ先に作成）
+if (-not (Test-Path (Split-Path $PROFILE))) {
+  New-Item -ItemType Directory -Path (Split-Path $PROFILE) -Force
+}
+New-Item -ItemType SymbolicLink -Path $PROFILE -Target "$HOME\dotfiles\powershell\Microsoft.PowerShell_profile.ps1"
+```
