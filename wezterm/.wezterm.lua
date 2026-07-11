@@ -43,12 +43,62 @@ wezterm.on('toggle-opacity', function(window, pane)
   window:set_config_overrides(overrides)
 end)
 
+-- === tmux風: リーダーキー + ペイン/ワークスペース =====================
+-- tmuxの prefix に相当する「リーダーキー」を Ctrl+a に設定。Ctrl+a に続けて下のキーを押す。
+-- ※ pwsh の Ctrl+a(行頭移動) が潰れるが、リーダー→Ctrl+a で従来通り送れるようにしてある。
+config.leader = { key = 'a', mods = 'CTRL' }
+
+local act = wezterm.action
+
 config.keys = {
-  {
-    key = 'O',
-    mods = 'CTRL|SHIFT',
-    action = wezterm.action.EmitEvent 'toggle-opacity',
-  },
+  -- 透過トグル（既存）
+  { key = 'O', mods = 'CTRL|SHIFT', action = act.EmitEvent 'toggle-opacity' },
+
+  -- リーダー→Ctrl+a で本来の Ctrl+a を送る（pwshの行頭移動などを温存）
+  { key = 'a', mods = 'LEADER|CTRL', action = act.SendKey { key = 'a', mods = 'CTRL' } },
+
+  -- --- ペイン分割（nvimの :vsplit / :split と同じ感覚）---
+  { key = 'v', mods = 'LEADER', action = act.SplitHorizontal { domain = 'CurrentPaneDomain' } }, -- 左右に分割
+  { key = 's', mods = 'LEADER', action = act.SplitVertical   { domain = 'CurrentPaneDomain' } }, -- 上下に分割
+
+  -- --- ペイン移動（vim風 h/j/k/l）---
+  { key = 'h', mods = 'LEADER', action = act.ActivatePaneDirection 'Left' },
+  { key = 'j', mods = 'LEADER', action = act.ActivatePaneDirection 'Down' },
+  { key = 'k', mods = 'LEADER', action = act.ActivatePaneDirection 'Up' },
+  { key = 'l', mods = 'LEADER', action = act.ActivatePaneDirection 'Right' },
+
+  -- --- ペイン: ズーム(1画面に最大化) / クローズ ---
+  { key = 'z', mods = 'LEADER', action = act.TogglePaneZoomState },
+  { key = 'x', mods = 'LEADER', action = act.CloseCurrentPane { confirm = true } },
+
+  -- --- ワークスペース ---
+  { key = 'g', mods = 'LEADER', action = act.EmitEvent 'ghq-open-workspace' },                  -- ghqから開く
+  { key = 'w', mods = 'LEADER', action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } }, -- 開いている中から切替
 }
+
+-- === ghq: リポジトリを選んでワークスペースを開く（Ctrl+a → g）=========
+-- ghq はPATHにある前提（PATH更新後にweztermを起動し直せば認識される）。
+wezterm.on('ghq-open-workspace', function(window, pane)
+  local ok, stdout = wezterm.run_child_process { 'ghq', 'list', '--full-path' }
+  if not ok then return end
+  local choices = {}
+  for _, path in ipairs(wezterm.split_by_newlines(stdout)) do
+    local p = path:gsub('%s+$', '') -- 末尾の空白/CRを除去
+    if p ~= '' then
+      table.insert(choices, { id = p, label = p:gsub('.*[/\\]', '') })
+    end
+  end
+  window:perform_action(
+    act.InputSelector {
+      title = 'ghq: 開くリポジトリ',
+      choices = choices,
+      fuzzy = true,
+      action = wezterm.action_callback(function(win, p, id, label)
+        if id then
+          win:perform_action(act.SwitchToWorkspace { name = label, spawn = { cwd = id } }, p)
+        end
+      end),
+    }, pane)
+end)
 
 return config
