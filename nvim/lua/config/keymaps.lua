@@ -9,6 +9,10 @@ vim.keymap.set("n", "<C-l>", smart_splits.move_cursor_right, { desc = "右のウ
 vim.keymap.set("n", "<leader>sv", "<cmd>vsplit<cr>", { desc = "左右に分割" })
 vim.keymap.set("n", "<leader>sh", "<cmd>split<cr>", { desc = "上下に分割" })
 
+-- コメントのトグル(gc/gcc)はNeovim組み込み機能。Ctrl+/からも呼べるようにする。
+vim.keymap.set("n", "<C-_>", "gcc", { desc = "コメントをトグル", remap = true })
+vim.keymap.set("v", "<C-_>", "gc", { desc = "選択範囲のコメントをトグル", remap = true })
+
 vim.api.nvim_create_autocmd("LspAttach", {
   callback = function(event)
     local map = function(keys, fn, desc)
