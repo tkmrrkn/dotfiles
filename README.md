@@ -33,7 +33,7 @@ dotfiles/
 │           ├── nvim-autopairs.lua        # 括弧・クォートの自動閉じ
 │           └── smart-splits.lua          # nvim分割/weztermペインの移動統合
 ├── powershell/
-│   └── Microsoft.PowerShell_profile.ps1  # PowerShell プロファイル（zoxide 初期化）→ $PROFILE に symlink
+│   └── Microsoft.PowerShell_profile.ps1  # PowerShell プロファイル（zoxide 初期化・fzf 連携）→ $PROFILE に symlink
 ├── winget/
 │   └── install.ps1        # winget で入れるツール一式
 ├── npm/
@@ -49,7 +49,7 @@ dotfiles/
 ```powershell
 # 主要ツール
 #   WezTerm / Neovim / PowerShell / ripgrep / Nerd Font /
-#   Git / GitHub CLI(gh) / ghq / Node.js / zoxide /
+#   Git / GitHub CLI(gh) / ghq / Node.js / zoxide / fzf /
 #   Visual Studio Build Tools(C++ワークロード。treesitterパーサーのビルドに使用)
 ./winget/install.ps1
 
