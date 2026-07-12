@@ -8,3 +8,4 @@ winget install --id GitHub.cli -e
 winget install --id x-motemen.ghq -e
 winget install --id OpenJS.NodeJS.LTS -e
 winget install --id ajeetdsouza.zoxide -e
+winget install --id Microsoft.VisualStudio.2022.BuildTools -e --override "--quiet --wait --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended"
