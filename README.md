@@ -36,10 +36,10 @@ dotfiles/
 │   └── Microsoft.PowerShell_profile.ps1  # PowerShell プロファイル（zoxide 初期化・fzf 連携）→ $PROFILE に symlink
 ├── winget/
 │   └── install.ps1        # winget で入れるツール一式
-├── npm/
-│   └── install.ps1        # npm グローバルパッケージ
+├── pnpm/
+│   └── install.ps1        # pnpm グローバルパッケージ
 └── tools/
-    └── install.ps1        # winget/npm 以外のインストールコマンド（Claude Code CLI 等）
+    └── install.ps1        # winget/pnpm 以外のインストールコマンド（Claude Code CLI 等）
 ```
 
 ## 導入の仕方
@@ -49,13 +49,13 @@ dotfiles/
 ```powershell
 # 主要ツール
 #   WezTerm / Neovim / PowerShell / ripgrep / Nerd Font /
-#   Git / GitHub CLI(gh) / ghq / Node.js / zoxide / fzf /
+#   Git / GitHub CLI(gh) / ghq / Node.js / pnpm / zoxide / fzf /
 #   Visual Studio Build Tools(C++ワークロード。treesitterパーサーのビルドに使用)
 ./winget/install.ps1
 
-# npm グローバル（Node.js インストール後に）
+# pnpm グローバル（Node.js / pnpm インストール後に）
 #   clasp / tree-sitter-cli(treesitterパーサーのビルドに使用)
-./npm/install.ps1
+./pnpm/install.ps1
 
 # その他（Claude Code CLI など）
 ./tools/install.ps1
