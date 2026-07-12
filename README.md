@@ -4,6 +4,7 @@
 
 ```
 dotfiles/
+├── link.ps1                # 設定ファイルの symlink を張る（冪等）
 ├── wezterm/
 │   └── .wezterm.lua        # WezTerm 設定（pwsh 既定・kanagawa 配色・透過トグル・Nerd Font）
 ├── nvim/                   # Neovim 設定（→ %LOCALAPPDATA%\nvim に symlink）
@@ -44,47 +45,38 @@ dotfiles/
 
 ## 導入の仕方
 
-### 1. ツールを入れる
-
-```powershell
-# 主要ツール
-#   WezTerm / Neovim / PowerShell / ripgrep / Nerd Font /
-#   Git / GitHub CLI(gh) / ghq / Node.js / pnpm / zoxide / fzf /
-#   Visual Studio Build Tools(C++ワークロード。treesitterパーサーのビルドに使用)
-./winget/install.ps1
-
-# pnpm グローバル（Node.js / pnpm インストール後に）
-#   clasp / tree-sitter-cli(treesitterパーサーのビルドに使用)
-./pnpm/install.ps1
-
-# その他（Claude Code CLI など）
-./tools/install.ps1
-```
-
-### 2. 開発者モードを有効化
+### 1. 開発者モードを有効化
 
 symlink 作成に必要（dotfiles の symlink、tree-sitter-manager.nvim のパーサー追加時も同様）。
 設定 → プライバシーとセキュリティ → 開発者向け → 「開発者モード」をオン。
 （管理者権限の pwsh で代用も可。作業が終わったらオフに戻す）
 
-### 3. リポジトリを取得
+### 2. リポジトリを取得
 
 ```powershell
+# git が無ければ先に: winget install --id Git.Git -e
 git clone https://github.com/tkmrrkn/dotfiles.git "$HOME\dotfiles"
+cd "$HOME\dotfiles"
 ```
 
-### 4. symlink を張る
+### 3. セットアップを実行
 
 ```powershell
-# WezTerm
-New-Item -ItemType SymbolicLink -Path "$HOME\.wezterm.lua" -Target "$HOME\dotfiles\wezterm\.wezterm.lua"
+# 主要ツールを winget で入れる
+#   WezTerm / Neovim / PowerShell / ripgrep / Nerd Font /
+#   Git / GitHub CLI(gh) / ghq / Node.js / pnpm / zoxide / fzf /
+#   Visual Studio Build Tools(C++ワークロード。treesitterパーサーのビルドに使用)
+./winget/install.ps1
 
-# Neovim
-New-Item -ItemType SymbolicLink -Path "$env:LOCALAPPDATA\nvim" -Target "$HOME\dotfiles\nvim"
+# pwsh を起動（新しいセッションで PATH を反映）
+pwsh -NoLogo
 
-# PowerShell プロファイル（親フォルダが無ければ先に作成）
-if (-not (Test-Path (Split-Path $PROFILE))) {
-  New-Item -ItemType Directory -Path (Split-Path $PROFILE) -Force
-}
-New-Item -ItemType SymbolicLink -Path $PROFILE -Target "$HOME\dotfiles\powershell\Microsoft.PowerShell_profile.ps1"
+# pnpm グローバル（clasp / tree-sitter-cli）
+./pnpm/install.ps1
+
+# その他（Claude Code CLI など）
+./tools/install.ps1
+
+# 設定ファイルの symlink（冪等・再実行可）
+./link.ps1
 ```
