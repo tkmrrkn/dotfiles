@@ -15,17 +15,23 @@ dotfiles/
 │       │   ├── keymaps.lua # キーマップ（LSP の LspAttach 含む）
 │       │   └── lazy.lua    # lazy.nvim ブートストラップ
 │       └── plugins/        # プラグイン定義（1ファイル1プラグイン）
-│           ├── kanagawa.lua    # 配色
-│           ├── which-key.lua   # キー補助ポップアップ
-│           ├── lualine.lua     # ステータスライン
-│           ├── telescope.lua   # ファジー検索
-│           ├── gitsigns.lua    # git 差分表示
-│           ├── fugitive.lua    # git 操作
-│           ├── oil.lua         # ファイラ
-│           ├── mason.lua       # LSP サーバー管理
-│           ├── lsp.lua         # mason-lspconfig + lspconfig（lua_ls）
-│           ├── blink.lua       # 補完エンジン
-│           └── lazydev.lua     # Neovim Lua 開発支援
+│           ├── kanagawa.lua              # 配色
+│           ├── which-key.lua             # キー補助ポップアップ
+│           ├── lualine.lua               # ステータスライン
+│           ├── noice.lua                 # コマンドライン/通知のポップアップ表示
+│           ├── telescope.lua             # ファジー検索
+│           ├── gitsigns.lua              # git 差分表示
+│           ├── fugitive.lua              # git 操作
+│           ├── oil.lua                   # ファイラ
+│           ├── mason.lua                 # LSP サーバー管理
+│           ├── lsp.lua                   # mason-lspconfig + lspconfig（lua_ls）
+│           ├── blink.lua                 # 補完エンジン
+│           ├── lazydev.lua               # Neovim Lua 開発支援
+│           ├── tree-sitter-manager.lua   # treesitterパーサー管理・ハイライト
+│           ├── indent-blankline.lua      # インデントガイド表示
+│           ├── flash.lua                 # ラベルジャンプ(sキー)
+│           ├── nvim-autopairs.lua        # 括弧・クォートの自動閉じ
+│           └── smart-splits.lua          # nvim分割/weztermペインの移動統合
 ├── powershell/
 │   └── Microsoft.PowerShell_profile.ps1  # PowerShell プロファイル（zoxide 初期化）→ $PROFILE に symlink
 ├── winget/
@@ -43,10 +49,12 @@ dotfiles/
 ```powershell
 # 主要ツール
 #   WezTerm / Neovim / PowerShell / ripgrep / Nerd Font /
-#   Git / GitHub CLI(gh) / ghq / Node.js / zoxide
+#   Git / GitHub CLI(gh) / ghq / Node.js / zoxide /
+#   Visual Studio Build Tools(C++ワークロード。treesitterパーサーのビルドに使用)
 ./winget/install.ps1
 
 # npm グローバル（Node.js インストール後に）
+#   clasp / tree-sitter-cli(treesitterパーサーのビルドに使用)
 ./npm/install.ps1
 
 # その他（Claude Code CLI など）
@@ -55,9 +63,9 @@ dotfiles/
 
 ### 2. 開発者モードを有効化
 
-symlink 作成に必要。
+symlink 作成に必要（dotfiles の symlink、tree-sitter-manager.nvim のパーサー追加時も同様）。
 設定 → プライバシーとセキュリティ → 開発者向け → 「開発者モード」をオン。
-（オンにするのは symlink を張る間だけでよい。管理者権限の pwsh で代用も可）
+（管理者権限の pwsh で代用も可。作業が終わったらオフに戻す）
 
 ### 3. リポジトリを取得
 
