@@ -30,8 +30,10 @@ dotfiles/
 │   └── Microsoft.PowerShell_profile.ps1  # PowerShell プロファイル（zoxide 初期化）→ $PROFILE に symlink
 ├── winget/
 │   └── install.ps1        # winget で入れるツール一式
-└── npm/
-    └── install.ps1        # npm グローバルパッケージ
+├── npm/
+│   └── install.ps1        # npm グローバルパッケージ
+└── tools/
+    └── install.ps1        # winget/npm 以外のインストールコマンド（Claude Code CLI 等）
 ```
 
 ## 導入の仕方
@@ -46,6 +48,9 @@ dotfiles/
 
 # npm グローバル（Node.js インストール後に）
 ./npm/install.ps1
+
+# その他（Claude Code CLI など）
+./tools/install.ps1
 ```
 
 ### 2. 開発者モードを有効化
