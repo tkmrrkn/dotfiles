@@ -50,7 +50,41 @@ config.leader = { key = 'a', mods = 'CTRL' }
 
 local act = wezterm.action
 
+-- === smart-splits.nvim連携: Ctrl+hjklでnvimの分割とweztermのペインを継ぎ目なく移動 ===
+-- nvim側がsmart-splits.nvimでユーザー変数 IS_NVIM を自動セット/解除してくれるので、
+-- それを見て「nvim実行中ならキーをそのまま転送」「そうでなければweztermがペイン移動」を切り替える。
+local function is_vim(pane)
+  return pane:get_user_vars().IS_NVIM == 'true'
+end
+
+local direction_keys = {
+  h = 'Left',
+  j = 'Down',
+  k = 'Up',
+  l = 'Right',
+}
+
+local function split_nav(key)
+  return {
+    key = key,
+    mods = 'CTRL',
+    action = wezterm.action_callback(function(win, pane)
+      if is_vim(pane) then
+        win:perform_action({ SendKey = { key = key, mods = 'CTRL' } }, pane)
+      else
+        win:perform_action({ ActivatePaneDirection = direction_keys[key] }, pane)
+      end
+    end),
+  }
+end
+
 config.keys = {
+  -- Ctrl+hjkl: nvimの外ではweztermのペイン移動、nvimの中はnvim側(smart-splits.nvim)に委譲
+  split_nav('h'),
+  split_nav('j'),
+  split_nav('k'),
+  split_nav('l'),
+
   -- 透過トグル（既存）
   { key = 'O', mods = 'CTRL|SHIFT', action = act.EmitEvent 'toggle-opacity' },
 

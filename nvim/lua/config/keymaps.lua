@@ -1,9 +1,10 @@
 vim.keymap.set("i", "jk", "<Esc>", { desc = "Escの代替" })
 
-vim.keymap.set("n", "<C-h>", "<C-w>h", { desc = "左のウィンドウへ移動" })
-vim.keymap.set("n", "<C-j>", "<C-w>j", { desc = "下のウィンドウへ移動" })
-vim.keymap.set("n", "<C-k>", "<C-w>k", { desc = "上のウィンドウへ移動" })
-vim.keymap.set("n", "<C-l>", "<C-w>l", { desc = "右のウィンドウへ移動" })
+local smart_splits = require("smart-splits")
+vim.keymap.set("n", "<C-h>", smart_splits.move_cursor_left, { desc = "左のウィンドウ/ペインへ移動" })
+vim.keymap.set("n", "<C-j>", smart_splits.move_cursor_down, { desc = "下のウィンドウ/ペインへ移動" })
+vim.keymap.set("n", "<C-k>", smart_splits.move_cursor_up, { desc = "上のウィンドウ/ペインへ移動" })
+vim.keymap.set("n", "<C-l>", smart_splits.move_cursor_right, { desc = "右のウィンドウ/ペインへ移動" })
 
 vim.keymap.set("n", "<leader>sv", "<cmd>vsplit<cr>", { desc = "左右に分割" })
 vim.keymap.set("n", "<leader>sh", "<cmd>split<cr>", { desc = "上下に分割" })
