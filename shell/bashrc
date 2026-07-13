@@ -1,0 +1,18 @@
+# WSL 用 bash 設定。link.sh が ~/.bashrc に読み込みを追記する。
+# powershell/Microsoft.PowerShell_profile.ps1 の bash 版に相当。
+
+# === zoxide =========================================================
+# `z <部分名>` でよく行くディレクトリへ即移動（frecencyで学習するcd代替）
+eval "$(zoxide init bash)"
+
+# === fzf =============================================================
+# 共通オプション（高さ/レイアウト/枠/プロンプト）
+export FZF_DEFAULT_OPTS='--height 40% --layout reverse --border rounded --info inline --prompt "> "'
+
+# Ctrl+r: 履歴検索 / Ctrl+t: ファイル選択 / Alt+c: ディレクトリ移動
+# fzf 0.48+ は本体がキーバインドを出力できる。apt 版が古い場合は同梱スクリプトを読む。
+if fzf --bash >/dev/null 2>&1; then
+  eval "$(fzf --bash)"
+elif [ -f /usr/share/doc/fzf/examples/key-bindings.bash ]; then
+  . /usr/share/doc/fzf/examples/key-bindings.bash
+fi

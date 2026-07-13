@@ -1,0 +1,3 @@
+# WSL で実行するスクリプトは Windows 側で checkout しても LF を保つ（CRLF だと bash が解釈できない）
+*.sh text eol=lf
+shell/bashrc text eol=lf

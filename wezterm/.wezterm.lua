@@ -105,6 +105,10 @@ config.keys = {
   { key = 'z', mods = 'LEADER', action = act.TogglePaneZoomState },
   { key = 'x', mods = 'LEADER', action = act.CloseCurrentPane { confirm = true } },
 
+  -- --- ドメイン（WSL など）を fuzzy で選んで新規タブ ---
+  -- WSL の distro は WezTerm が自動検出して "WSL:Ubuntu" のような名前で並ぶ。
+  { key = 'd', mods = 'LEADER', action = act.ShowLauncherArgs { flags = 'FUZZY|DOMAINS' } },
+
   -- --- ワークスペース ---
   { key = 'g', mods = 'LEADER', action = act.EmitEvent 'ghq-open-workspace' },                  -- ghqから開く
   { key = 'w', mods = 'LEADER', action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } }, -- 開いている中から切替
