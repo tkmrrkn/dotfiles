@@ -11,3 +11,4 @@ winget install --id pnpm.pnpm -e
 winget install --id ajeetdsouza.zoxide -e
 winget install --id junegunn.fzf -e
 winget install --id Microsoft.VisualStudio.2022.BuildTools -e --override "--quiet --wait --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended"
+winget install --id Microsoft.PowerToys -e
