@@ -1,3 +1,9 @@
+# === oh-my-posh ======================================================
+# kanagawa.nvim に合わせたテーマでプロンプトを描画。
+# $PROFILE はこのファイルへの symlink なので、Target からリポジトリのルートを辿る。
+$dotfilesRoot = Split-Path (Split-Path (Get-Item $PROFILE -Force).Target -Parent) -Parent
+oh-my-posh init pwsh --config "$dotfilesRoot\oh-my-posh\prompt.omp.json" | Invoke-Expression
+
 # === zoxide =========================================================
 # `z <部分名>` でよく行くディレクトリへ即移動（frecencyで学習するcd代替）
 Invoke-Expression (& { (zoxide init powershell | Out-String) })

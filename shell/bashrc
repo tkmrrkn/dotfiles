@@ -1,6 +1,12 @@
 # WSL 用 bash 設定。link.sh が ~/.bashrc に読み込みを追記する。
 # powershell/Microsoft.PowerShell_profile.ps1 の bash 版に相当。
 
+# === oh-my-posh ======================================================
+# kanagawa.nvim に合わせたテーマでプロンプトを描画。
+# このファイルは link.sh が絶対パスで source するので、BASH_SOURCE からリポジトリのルートを辿る。
+repo_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+eval "$(oh-my-posh init bash --config "$repo_dir/oh-my-posh/kanagawa-wave.omp.json")"
+
 # === zoxide =========================================================
 # `z <部分名>` でよく行くディレクトリへ即移動（frecencyで学習するcd代替）
 eval "$(zoxide init bash)"

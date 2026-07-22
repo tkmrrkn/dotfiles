@@ -6,6 +6,9 @@ set -euo pipefail
 # Claude Code CLI
 curl -fsSL https://claude.ai/install.sh | bash
 
+# oh-my-posh（apt に無いので公式インストールスクリプトを使う）
+curl -fsSL https://ohmyposh.dev/install.sh | bash -s -- -d "$HOME/.local/bin"
+
 # ghq（apt に無いので GitHub Releases のバイナリを入れる）
 tmp="$(mktemp -d)"
 trap 'rm -rf "$tmp"' EXIT

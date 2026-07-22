@@ -35,9 +35,11 @@ dotfiles/
 │           ├── nvim-autopairs.lua        # 括弧・クォートの自動閉じ
 │           └── smart-splits.lua          # nvim分割/weztermペインの移動統合
 ├── powershell/
-│   └── Microsoft.PowerShell_profile.ps1  # PowerShell プロファイル（zoxide 初期化・fzf 連携）→ $PROFILE に symlink
+│   └── Microsoft.PowerShell_profile.ps1  # PowerShell プロファイル（oh-my-posh・zoxide 初期化・fzf 連携）→ $PROFILE に symlink
 ├── shell/
-│   └── bashrc             # WSL 用 bash 設定（zoxide 初期化・fzf キーバインド）
+│   └── bashrc             # WSL 用 bash 設定（oh-my-posh・zoxide 初期化・fzf キーバインド）
+├── oh-my-posh/
+│   └── kanagawa-wave.omp.json  # プロンプトテーマ（kanagawa.nvim 配色）
 ├── winget/
 │   └── install.ps1        # winget で入れるツール一式
 ├── apt/
@@ -71,7 +73,7 @@ cd "$HOME\dotfiles"
 ```powershell
 # 主要ツールを winget で入れる
 #   WezTerm / Neovim / PowerShell / ripgrep / Nerd Font /
-#   Git / GitHub CLI(gh) / ghq / Node.js / pnpm / zoxide / fzf /
+#   Git / GitHub CLI(gh) / ghq / Node.js / pnpm / zoxide / fzf / oh-my-posh /
 #   Visual Studio Build Tools(C++ワークロード。treesitterパーサーのビルドに使用)
 ./winget/install.ps1
 
@@ -100,7 +102,7 @@ cd ~/dotfiles
 
 ./apt/install.sh    # apt で入れるツール一式
 ./pnpm/install.sh   # pnpm 本体・Node.js・グローバルパッケージ
-./tools/install.sh  # Claude Code CLI・ghq
+./tools/install.sh  # Claude Code CLI・oh-my-posh・ghq
 ./link.sh           # 設定ファイルの symlink（冪等・再実行可）
 
 exec bash           # シェル設定を反映
