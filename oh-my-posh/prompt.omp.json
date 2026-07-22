@@ -106,7 +106,7 @@
               "Added": "<p:git-added>+%d</>",
               "Unmerged": "<p:diag-info>X%d</> ",
               "Deleted": "<p:git-removed>-%d</> ",
-              "Modified": "<p:git-changed>~%d </> ",
+              "Modified": "<p:git-changed>~%d</> ",
               "Untracked": "<p:diag-warning>?%d</> "
             }
           },
@@ -118,13 +118,7 @@
             "{{ if (gt .Staging.Added 0) }}{{ .Staging.String }}{{ end }}",
             "{{ if gt .StashCount 0 }}<p:blue>*{{ .StashCount }}</>{{ end }}"
           ]
-        }
-      ]
-    },
-    {
-      "type": "prompt",
-      "alignment": "right",
-      "segments": [
+        },
         {
           "type": "executiontime",
           "style": "plain",
@@ -134,6 +128,14 @@
             "style": "austin",
             "always_enabled": true
           }
+        },
+        {
+          "type": "text",
+          "style": "plain",
+          "foreground_templates": [
+            "{{ if eq .Code 0 }}p:bright-green{{ else }}p:bright-red{{ end }}"
+          ],
+          "template": " ❯"
         }
       ]
     }
