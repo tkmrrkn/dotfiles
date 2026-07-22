@@ -1,4 +1,5 @@
 vim.keymap.set("i", "jk", "<Esc>", { desc = "Escの代替" })
+vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>", { desc = "検索ハイライトを消す" })
 
 local smart_splits = require("smart-splits")
 vim.keymap.set("n", "<C-h>", smart_splits.move_cursor_left, { desc = "左のウィンドウ/ペインへ移動" })
