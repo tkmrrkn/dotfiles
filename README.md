@@ -11,6 +11,9 @@ dotfiles/
 ├── nvim/                   # Neovim 設定（→ Windows: %LOCALAPPDATA%\nvim、WSL: ~/.config/nvim に symlink）
 │   ├── init.lua            # 司令塔（config/* を読み込むだけ）
 │   ├── lazy-lock.json      # プラグインのバージョン固定
+│   ├── ftplugin/
+│   │   ├── markdown.lua      # Markdown用設定。:MdToPdf(pandoc+ヘッドレスブラウザでPDF化)
+│   │   └── markdown-pdf.css   # :MdToPdf のスタイル
 │   └── lua/
 │       ├── config/
 │       │   ├── options.lua # エディタ基本設定
@@ -33,7 +36,9 @@ dotfiles/
 │           ├── indent-blankline.lua      # インデントガイド表示
 │           ├── flash.lua                 # ラベルジャンプ(sキー)
 │           ├── nvim-autopairs.lua        # 括弧・クォートの自動閉じ
-│           └── smart-splits.lua          # nvim分割/weztermペインの移動統合
+│           ├── smart-splits.lua          # nvim分割/weztermペインの移動統合
+│           ├── quicker.lua               # quickfixを編集可能にする
+│           └── render-markdown.lua       # Markdownをバッファ内で装飾表示
 ├── powershell/
 │   └── Microsoft.PowerShell_profile.ps1  # PowerShell プロファイル（oh-my-posh・zoxide 初期化・fzf 連携）→ $PROFILE に symlink
 ├── shell/
@@ -74,7 +79,8 @@ cd "$HOME\dotfiles"
 # 主要ツールを winget で入れる
 #   WezTerm / Neovim / PowerShell / ripgrep / Nerd Font /
 #   Git / GitHub CLI(gh) / ghq / Node.js / pnpm / zoxide / fzf / oh-my-posh /
-#   Visual Studio Build Tools(C++ワークロード。treesitterパーサーのビルドに使用)
+#   Visual Studio Build Tools(C++ワークロード。treesitterパーサーのビルドに使用) /
+#   PowerToys / Pandoc(:MdToPdf で使用)
 ./winget/install.ps1
 
 # pwsh を起動（新しいセッションで PATH を反映）
