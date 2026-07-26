@@ -7,7 +7,6 @@ return {
         "lua",
         "vim",
         "vimdoc",
-        "markdown",
         "json",
         "javascript",
         "typescript",
