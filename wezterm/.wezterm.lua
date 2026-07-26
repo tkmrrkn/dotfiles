@@ -112,6 +112,46 @@ config.keys = {
   -- --- ワークスペース ---
   { key = 'g', mods = 'LEADER', action = act.EmitEvent 'ghq-open-workspace' },                  -- ghqから開く
   { key = 'w', mods = 'LEADER', action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } }, -- 開いている中から切替
+
+  -- --- Quick Select上書き（Ctrl+Shift+Space）---
+  -- 常にコピーした上で、URLやWindowsのフルパス（コマンド出力等に出てくる本物のパス）なら追加で開く。
+  -- ※ oh-my-poshのプロンプト自体は "style": "letter" で末尾以外のフォルダ名を1文字に省略表示するため
+  --   （例: 深い階層だと "C/U/t/dotfiles" のようになる）、表示文字列からの復元は原理的に不可能。
+  --   「今いるディレクトリを開く」はこのQuick Selectではなく下のLEADER+eで実カレントディレクトリを使う。
+  {
+    key = 'Space',
+    mods = 'CTRL|SHIFT',
+    action = act.QuickSelectArgs {
+      patterns = {
+        'https?://\\S+',        -- URL
+        '[A-Za-z]:\\\\[^\\s]+', -- Windowsパス (例: C:\path\to\file)
+      },
+      action = wezterm.action_callback(function(window, pane)
+        local text = window:get_selection_text_for_pane(pane)
+        window:copy_to_clipboard(text)
+
+        if text:match('^https?://') then
+          wezterm.open_with(text)
+        elseif text:match('^[A-Za-z]:\\\\') then
+          wezterm.background_child_process({ 'explorer.exe', text })
+        end
+      end),
+    },
+  },
+
+  -- --- カレントディレクトリをエクスプローラで開く（LEADER + e）---
+  -- OSC7（config: "pwd": "osc7" をoh-my-posh側で有効化済み）経由でWezTermが把握している
+  -- 実際のカレントディレクトリを使うので、プロンプトの表示形式に依存せず確実に動く。
+  {
+    key = 'e',
+    mods = 'LEADER',
+    action = wezterm.action_callback(function(window, pane)
+      local cwd = pane:get_current_working_dir()
+      if cwd then
+        wezterm.background_child_process({ 'explorer.exe', cwd.file_path })
+      end
+    end),
+  },
 }
 
 -- === ghq: リポジトリを選んでワークスペースを開く（Ctrl+a → g）=========
