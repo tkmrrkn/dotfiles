@@ -148,7 +148,9 @@ config.keys = {
     action = wezterm.action_callback(function(window, pane)
       local cwd = pane:get_current_working_dir()
       if cwd then
-        wezterm.background_child_process({ 'explorer.exe', cwd.file_path })
+        -- file_pathは "/C:/Users/..." 形式なので explorer.exe 向けに整形
+        local path = cwd.file_path:gsub('^/(%a:)', '%1'):gsub('/', '\\')
+        wezterm.background_child_process({ 'explorer.exe', path })
       end
     end),
   },
