@@ -5,3 +5,9 @@ vim.opt.shiftwidth = 2
 vim.opt.tabstop = 2
 vim.opt.softtabstop = 2
 vim.opt.autoindent = true
+
+vim.diagnostic.config({
+  virtual_text = true,
+  underline = true,
+  signs = true,
+})
