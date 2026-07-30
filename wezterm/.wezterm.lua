@@ -140,16 +140,30 @@ config.keys = {
   },
 
   -- --- カレントディレクトリをエクスプローラで開く（LEADER + e）---
-  -- OSC7（config: "pwd": "osc7" をoh-my-posh側で有効化済み）経由でWezTermが把握している
-  -- 実際のカレントディレクトリを使うので、プロンプトの表示形式に依存せず確実に動く。
+  -- get_foreground_process_info() でOSに直接フォアグラウンドプロセスの実cwdを問い合わせる。
+  -- OSC7（oh-my-posh側で "pwd": "osc7" 有効化済み）だけに頼ると、WezTermがホスト名不一致等を理由に
+  -- cwd更新を無視し続け、常にペイン起動時の初期ディレクトリが開かれてしまう不具合があったため、
+  -- get_foreground_process_infoを優先し、取得できない場合のみOSC7ベースの旧方式にフォールバックする。
   {
     key = 'e',
     mods = 'LEADER',
     action = wezterm.action_callback(function(window, pane)
-      local cwd = pane:get_current_working_dir()
-      if cwd then
-        -- file_pathは "/C:/Users/..." 形式なので explorer.exe 向けに整形
-        local path = cwd.file_path:gsub('^/(%a:)', '%1'):gsub('/', '\\')
+      local path
+
+      -- 優先: OSに直接問い合わせるので常に正確（OSC7のホスト名検証などに影響されない）
+      local proc = pane:get_foreground_process_info()
+      if proc and proc.cwd then
+        path = proc.cwd
+      else
+        -- フォールバック: OSC7経由。file_pathは "/C:/Users/..." 形式
+        local cwd = pane:get_current_working_dir()
+        if cwd then
+          path = cwd.file_path
+        end
+      end
+
+      if path then
+        path = path:gsub('^/(%a:)', '%1'):gsub('/', '\\')
         wezterm.background_child_process({ 'explorer.exe', path })
       end
     end),
