@@ -5,6 +5,6 @@ return {
     "neovim/nvim-lspconfig",
   },
   opts = {
-    ensure_installed = { "lua_ls", "basedpyright", "ts_ls", "ruff" },
+    ensure_installed = { "lua_ls", "basedpyright", "ts_ls", "ruff", "kotlin_language_server" },
   },
 }

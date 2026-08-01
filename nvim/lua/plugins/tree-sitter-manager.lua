@@ -12,6 +12,7 @@ return {
         "typescript",
         "python",
         "bash",
+        "kotlin",
       },
     })
   end,
