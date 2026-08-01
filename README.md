@@ -40,7 +40,7 @@ dotfiles/
 │           ├── quicker.lua               # quickfixを編集可能にする
 │           └── render-markdown.lua       # Markdownをバッファ内で装飾表示
 ├── powershell/
-│   └── Microsoft.PowerShell_profile.ps1  # PowerShell プロファイル（oh-my-posh・zoxide 初期化・fzf 連携）→ $PROFILE に symlink
+│   └── Microsoft.PowerShell_profile.ps1  # PowerShell プロファイル（oh-my-posh・zoxide 初期化・fzf 連携・DeepL翻訳(trans)）→ $PROFILE に symlink
 ├── shell/
 │   └── bashrc             # WSL 用 bash 設定（oh-my-posh・zoxide 初期化・fzf キーバインド）
 ├── oh-my-posh/
