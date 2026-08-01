@@ -8,6 +8,7 @@ return {
       python = { "ruff_format" },
       typescript = { "prettier" },
       javascript = { "prettier" },
+      kotlin = { "ktlint" },
     },
     format_on_save = {
       timeout_ms = 500,

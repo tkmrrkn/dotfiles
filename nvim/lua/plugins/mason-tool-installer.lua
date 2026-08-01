@@ -6,6 +6,7 @@ return {
 			"stylua",
 			"ruff",
 			"prettier",
+			"ktlint",
 		},
 	},
 }
