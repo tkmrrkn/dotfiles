@@ -7,5 +7,9 @@ return {
     { "<leader>fb", "<cmd>Telescope buffers<cr>", desc = "バッファ一覧" },
     { "<leader>fh", "<cmd>Telescope help_tags<cr>", desc = "ヘルプ検索" },
   },
-  opts = {},
+  opts = {
+    defaults = {
+      path_display = { "shorten" },
+    },
+  },
 }
