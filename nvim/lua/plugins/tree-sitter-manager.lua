@@ -13,6 +13,7 @@ return {
         "python",
         "bash",
         "kotlin",
+        "sql",
       },
     })
   end,

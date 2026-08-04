@@ -5,7 +5,7 @@ return {
     "neovim/nvim-lspconfig",
   },
   opts = {
-    ensure_installed = { "lua_ls", "basedpyright", "ts_ls", "ruff" },
+    ensure_installed = { "lua_ls", "basedpyright", "ts_ls", "ruff", "sqlls" },
     -- kotlin_language_server is superseded by kmp_lsp below; exclude it so a
     -- reinstalled package doesn't get auto-enabled and fight over diagnostics.
     automatic_enable = { exclude = { "kotlin_language_server" } },
