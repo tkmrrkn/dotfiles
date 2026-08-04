@@ -65,3 +65,11 @@ function trans {
     -Body ([System.Text.Encoding]::UTF8.GetBytes($body))
   $res.translations.text
 }
+
+# === カレントディレクトリをOSプロセスCWDに同期 ==========================
+# $PWDと[Environment]::CurrentDirectoryが同期されず、外部プロセスから見たcwdが
+# 起動時のまま固定される問題（wezhtermのcwd取得等に影響）への対策。
+$ExecutionContext.SessionState.InvokeCommand.LocationChangedAction = {
+  param($sender, $eventArgs)
+  [Environment]::CurrentDirectory = $eventArgs.NewPath.ProviderPath
+}
