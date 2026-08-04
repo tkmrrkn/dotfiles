@@ -7,6 +7,7 @@ return {
 			"ruff",
 			"prettier",
 			"ktlint",
+			"sqlfluff",
 		},
 	},
 }
