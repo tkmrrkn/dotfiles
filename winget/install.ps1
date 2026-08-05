@@ -19,3 +19,5 @@ winget install --id Zen-Team.Zen-Browser -e
 winget install --id sakura-editor.sakura -e
 winget install --id qutebrowser.qutebrowser -e
 winget install --id astral-sh.uv -e
+winget install --id gopass.gopass -e
+winget install --id FiloSottile.age -e
