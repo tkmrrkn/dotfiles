@@ -18,3 +18,4 @@ winget install --id Gyan.FFmpeg -e
 winget install --id Zen-Team.Zen-Browser -e
 winget install --id sakura-editor.sakura -e
 winget install --id qutebrowser.qutebrowser -e
+winget install --id astral-sh.uv -e
