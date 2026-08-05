@@ -199,4 +199,69 @@ wezterm.on("ghq-open-workspace", function(window, pane)
 	)
 end)
 
+-- === Claude Code ステータス =========================================
+-- claude agents --json をポーリングし、ウィンドウタイトルバーに集計を表示する。
+local claude_agents = {} -- 全エントリ。プロセス終了済みでもstateが残るbackgroundを含む
+
+local function refresh_claude_agents()
+	local ok, stdout = wezterm.run_child_process({ "claude", "agents", "--json" })
+	if not ok or not stdout or stdout == "" then
+		claude_agents = {}
+		return
+	end
+	claude_agents = wezterm.json_parse(stdout) or {}
+end
+
+local CLAUDE_STATUS_DISPLAY = {
+	busy = { icon = "▶", color = "blue" }, -- 実行中
+	waiting = { icon = "⏸", color = "red" }, -- 許可待ち(一時停止中)
+	idle = { icon = "■", color = "green" }, -- 完了(停止)
+}
+
+-- kindごとに見るべきフィールドが違う(公式ドキュメント準拠):
+--   interactive: status(idle/busy/waiting)がそのままプロセスの状態
+--   background : state(working/blocked/done/failed/stopped)がライフサイクル全体を表す。
+--                done/failed/stopped は終わっているので busy/waiting/idle のどれにも含めない。
+local function claude_bucket(entry)
+	if entry.kind == "background" then
+		if entry.state == "working" then
+			return "busy"
+		elseif entry.state == "blocked" then
+			return "waiting"
+		end
+		return nil
+	end
+	return entry.status
+end
+
+local function claude_status_counts()
+	local counts = { busy = 0, waiting = 0, idle = 0 }
+	for _, entry in ipairs(claude_agents) do
+		local bucket = claude_bucket(entry)
+		if counts[bucket] ~= nil then
+			counts[bucket] = counts[bucket] + 1
+		end
+	end
+	return counts
+end
+
+-- OSのウィンドウタイトルバーに表示。色は付けられない(プレーン文字列のみ)ので記号と件数だけ
+wezterm.on("format-window-title", function(tab, pane, tabs, panes, config)
+	refresh_claude_agents()
+	local counts = claude_status_counts()
+
+	local prefix = ""
+	for _, status in ipairs({ "waiting", "busy", "idle" }) do
+		if counts[status] > 0 then
+			prefix = prefix .. string.format("%s %d ", CLAUDE_STATUS_DISPLAY[status].icon, counts[status])
+		end
+	end
+
+	local title = tab.active_pane and tab.active_pane.title or "wezterm"
+	if prefix ~= "" then
+		return prefix .. "| " .. title
+	end
+	return title
+end)
+
 return config
