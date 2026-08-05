@@ -16,3 +16,4 @@ winget install --id JanDeDobbeleer.OhMyPosh -e
 winget install --id JohnMacFarlane.Pandoc -e
 winget install --id Gyan.FFmpeg -e
 winget install --id Zen-Team.Zen-Browser -e
+winget install --id sakura-editor.sakura -e
