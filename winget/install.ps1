@@ -17,3 +17,4 @@ winget install --id JohnMacFarlane.Pandoc -e
 winget install --id Gyan.FFmpeg -e
 winget install --id Zen-Team.Zen-Browser -e
 winget install --id sakura-editor.sakura -e
+winget install --id qutebrowser.qutebrowser -e
