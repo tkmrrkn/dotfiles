@@ -38,7 +38,7 @@ Set-PSReadLineKeyHandler -Key 'Ctrl+t' -BriefDescription 'FzfFiles' -ScriptBlock
 
 # === DeepL翻訳 ========================================================
 # `trans <text>` で日本語訳、`trans -To EN <text>` で英訳などターミナル内で完結。
-# 事前に $env:DEEPL_API_KEY をユーザー環境変数に設定しておく（DeepL API Free/Pro のキー）。
+# APIキーは事前に `gopass insert deepl/api-key` で登録しておく（DeepL API Free/Pro のキー）。
 function trans {
   param(
     # Position を明示しないと $To にも暗黙で位置引数が割り当てられ、`trans hello world` の
@@ -47,12 +47,13 @@ function trans {
     [string[]]$Text,
     [string]$To = 'JA'
   )
-  if (-not $env:DEEPL_API_KEY) {
-    Write-Error 'DEEPL_API_KEY が未設定です。DeepL API Free/Pro のキーを環境変数に設定してください。'
+  $apiKey = gopass show -o deepl/api-key 2>$null
+  if (-not $apiKey) {
+    Write-Error 'deepl/api-key が gopass に見つかりません。`gopass insert deepl/api-key` で登録してください。'
     return
   }
   # Free プランのキーは末尾が ":fx"。エンドポイントが Free/Pro で異なる。
-  $endpoint = if ($env:DEEPL_API_KEY.EndsWith(':fx')) {
+  $endpoint = if ($apiKey.EndsWith(':fx')) {
     'https://api-free.deepl.com/v2/translate'
   } else {
     'https://api.deepl.com/v2/translate'
@@ -60,7 +61,7 @@ function trans {
   # -Body にハッシュテーブルを渡すと multipart/form-data になり DeepL 側で値を解釈できないため、JSON で明示的に送る。
   $body = @{ text = @($Text -join ' '); target_lang = $To } | ConvertTo-Json
   $res = Invoke-RestMethod -Uri $endpoint -Method Post `
-    -Headers @{ Authorization = "DeepL-Auth-Key $($env:DEEPL_API_KEY)" } `
+    -Headers @{ Authorization = "DeepL-Auth-Key $apiKey" } `
     -ContentType 'application/json; charset=utf-8' `
     -Body ([System.Text.Encoding]::UTF8.GetBytes($body))
   $res.translations.text
