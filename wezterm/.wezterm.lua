@@ -200,8 +200,9 @@ wezterm.on("ghq-open-workspace", function(window, pane)
 end)
 
 -- === Claude Code ステータス =========================================
--- claude agents --json をポーリングし、ウィンドウタイトルバーに集計を表示する。
-local claude_agents = {} -- 全エントリ。プロセス終了済みでもstateが残るbackgroundを含む
+-- format-window-titleは同期専用でrun_child_process等の非同期APIを呼ぶとyieldエラーになるため、
+-- update-status側でポーリング・キャッシュし、format-window-titleはキャッシュを読むだけにする。
+local claude_agents = {}
 
 local function refresh_claude_agents()
 	local ok, stdout = wezterm.run_child_process({ "claude", "agents", "--json" })
@@ -212,16 +213,21 @@ local function refresh_claude_agents()
 	claude_agents = wezterm.json_parse(stdout) or {}
 end
 
+-- window_id -> workspace名。update-statusはwindowオブジェクトを直接渡すので検索不要。
+local workspace_by_window_id = {}
+
+wezterm.on("update-status", function(window, pane)
+	refresh_claude_agents()
+	workspace_by_window_id[window:window_id()] = window:active_workspace()
+end)
+
 local CLAUDE_STATUS_DISPLAY = {
-	busy = { icon = "▶", color = "blue" }, -- 実行中
-	waiting = { icon = "⏸", color = "red" }, -- 許可待ち(一時停止中)
-	idle = { icon = "■", color = "green" }, -- 完了(停止)
+	busy = "▶",
+	waiting = "⏸",
+	idle = "■",
 }
 
--- kindごとに見るべきフィールドが違う(公式ドキュメント準拠):
---   interactive: status(idle/busy/waiting)がそのままプロセスの状態
---   background : state(working/blocked/done/failed/stopped)がライフサイクル全体を表す。
---                done/failed/stopped は終わっているので busy/waiting/idle のどれにも含めない。
+-- interactiveはstatus、backgroundはstateを見る(done/failed/stoppedは終了扱いでnilを返す)
 local function claude_bucket(entry)
 	if entry.kind == "background" then
 		if entry.state == "working" then
@@ -234,32 +240,47 @@ local function claude_bucket(entry)
 	return entry.status
 end
 
-local function claude_status_counts()
-	local counts = { busy = 0, waiting = 0, idle = 0 }
-	for _, entry in ipairs(claude_agents) do
-		local bucket = claude_bucket(entry)
-		if counts[bucket] ~= nil then
-			counts[bucket] = counts[bucket] + 1
-		end
-	end
-	return counts
+-- cwdの末尾ディレクトリ名。ghq-open-workspaceの運用ではこれがworkspace名と一致する。
+local function repo_name_from_cwd(cwd)
+	return (cwd:gsub("[/\\]+$", ""):gsub(".*[/\\]", ""))
 end
 
--- OSのウィンドウタイトルバーに表示。色は付けられない(プレーン文字列のみ)ので記号と件数だけ
 wezterm.on("format-window-title", function(tab, pane, tabs, panes, config)
-	refresh_claude_agents()
-	local counts = claude_status_counts()
+	local current_workspace = workspace_by_window_id[tab.window_id]
 
-	local prefix = ""
-	for _, status in ipairs({ "waiting", "busy", "idle" }) do
-		if counts[status] > 0 then
-			prefix = prefix .. string.format("%s %d ", CLAUDE_STATUS_DISPLAY[status].icon, counts[status])
+	-- リポジトリ名ごとにbucket件数をまとめる(同じリポジトリで複数セッションが動くこともあるため)
+	local counts_by_repo = {}
+	local repo_order = {}
+	for _, entry in ipairs(claude_agents) do
+		local bucket = claude_bucket(entry)
+		if bucket then
+			local repo_name = repo_name_from_cwd(entry.cwd)
+			if not counts_by_repo[repo_name] then
+				counts_by_repo[repo_name] = { busy = 0, waiting = 0, idle = 0 }
+				table.insert(repo_order, repo_name)
+			end
+			counts_by_repo[repo_name][bucket] = counts_by_repo[repo_name][bucket] + 1
 		end
+	end
+
+	local parts = {}
+	for _, repo_name in ipairs(repo_order) do
+		local counts = counts_by_repo[repo_name]
+		local label = repo_name .. " "
+		for _, status in ipairs({ "waiting", "busy", "idle" }) do
+			if counts[status] > 0 then
+				label = label .. CLAUDE_STATUS_DISPLAY[status] .. tostring(counts[status])
+			end
+		end
+		if repo_name == current_workspace then
+			label = "[" .. label .. "]"
+		end
+		table.insert(parts, label)
 	end
 
 	local title = tab.active_pane and tab.active_pane.title or "wezterm"
-	if prefix ~= "" then
-		return prefix .. "| " .. title
+	if #parts > 0 then
+		return table.concat(parts, " | ") .. " | " .. title
 	end
 	return title
 end)
