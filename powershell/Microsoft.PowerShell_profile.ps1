@@ -47,11 +47,8 @@ function trans {
     [string[]]$Text,
     [string]$To = 'JA'
   )
-  $apiKey = gopass show -o deepl/api-key 2>$null
-  if (-not $apiKey) {
-    Write-Error 'deepl/api-key が gopass に見つかりません。`gopass insert deepl/api-key` で登録してください。'
-    return
-  }
+  # gopass の PIN 入力プロンプトは stderr に出るため、握り潰さない。
+  $apiKey = gopass show -o deepl/api-key
   # Free プランのキーは末尾が ":fx"。エンドポイントが Free/Pro で異なる。
   $endpoint = if ($apiKey.EndsWith(':fx')) {
     'https://api-free.deepl.com/v2/translate'
