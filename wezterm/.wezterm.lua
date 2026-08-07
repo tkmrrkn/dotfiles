@@ -50,6 +50,12 @@ config.leader = { key = "a", mods = "CTRL" }
 
 local act = wezterm.action
 
+-- === 画像クイックビュー ================================================
+-- 「すぐ見たい1枚」をF1一発でimgcat表示する。
+-- 画像はマシンごとに置くものが変わる想定のため、dotfiles/wezterm/assets/ に置きつつ.gitignoreで
+-- リポジトリには含めない。ファイルが存在しないマシンでもエラーにならないようにする。
+local quickview_image = wezterm.home_dir .. "\\dotfiles\\wezterm\\assets\\F1.png"
+
 -- === smart-splits.nvim連携: Ctrl+hjklでnvimの分割とweztermのペインを継ぎ目なく移動 ===
 -- nvim側がsmart-splits.nvimでユーザー変数 IS_NVIM を自動セット/解除してくれるので、
 -- それを見て「nvim実行中ならキーをそのまま転送」「そうでなければweztermがペイン移動」を切り替える。
@@ -167,6 +173,27 @@ config.keys = {
 				wezterm.background_child_process({ "explorer.exe", path })
 			end
 		end),
+	},
+
+	-- --- 画像を一発表示（F1）: F1.png を新規タブでimgcat表示 ---
+	{
+		key = "F1",
+		mods = "NONE",
+		action = act.SpawnCommandInNewTab({
+			args = {
+				"pwsh.exe",
+				"-NoLogo",
+				"-NoExit",
+				"-Command",
+				"if (Test-Path '"
+					.. quickview_image
+					.. "') { wezterm imgcat --width 100% '"
+					.. quickview_image
+					.. "' } else { Write-Host '画像が見つかりません: "
+					.. quickview_image
+					.. "' }",
+			},
+		}),
 	},
 }
 
