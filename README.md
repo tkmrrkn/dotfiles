@@ -81,7 +81,7 @@ cd "$HOME\dotfiles"
 #   Git / GitHub CLI(gh) / ghq / Node.js / pnpm / zoxide / fzf / oh-my-posh /
 #   Visual Studio Build Tools(C++ワークロード。treesitterパーサーのビルドに使用) /
 #   PowerToys / Pandoc(:MdToPdf で使用) / FFmpeg / Zen Browser / サクラエディタ / qutebrowser / uv /
-#   gopass / age(gopass の暗号化バックエンド) / TortoiseGit
+#   gopass / age(gopass の暗号化バックエンド) / TortoiseGit / Browser Tamer
 ./winget/install.ps1
 
 # pwsh を起動（新しいセッションで PATH を反映）
