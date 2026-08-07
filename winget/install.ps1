@@ -21,3 +21,4 @@ winget install --id qutebrowser.qutebrowser -e
 winget install --id astral-sh.uv -e
 winget install --id gopass.gopass -e
 winget install --id FiloSottile.age -e
+winget install --id TortoiseGit.TortoiseGit -e
