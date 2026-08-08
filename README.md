@@ -1,63 +1,27 @@
 # dotfiles
 
+Windows / WSL 共通の開発環境設定。`link.ps1` / `link.sh` で各設定ファイルを symlink する。
+
 ## 構成
 
 ```
 dotfiles/
-├── link.ps1                # 設定ファイルの symlink を張る（冪等）
-├── link.sh                 # 同上の WSL 版。~/.bashrc への読み込み追記も行う
-├── wezterm/
-│   └── .wezterm.lua        # WezTerm 設定（pwsh 既定・kanagawa 配色・透過トグル・Nerd Font）
-├── nvim/                   # Neovim 設定（→ Windows: %LOCALAPPDATA%\nvim、WSL: ~/.config/nvim に symlink）
-│   ├── init.lua            # 司令塔（config/* を読み込むだけ）
-│   ├── lazy-lock.json      # プラグインのバージョン固定
-│   ├── ftplugin/
-│   │   ├── markdown.lua      # Markdown用設定。:MdToPdf(pandoc+ヘッドレスブラウザでPDF化)
-│   │   └── markdown-pdf.css   # :MdToPdf のスタイル
-│   └── lua/
-│       ├── config/
-│       │   ├── options.lua # エディタ基本設定
-│       │   ├── keymaps.lua # キーマップ（LSP の LspAttach 含む）
-│       │   └── lazy.lua    # lazy.nvim ブートストラップ
-│       └── plugins/        # プラグイン定義（1ファイル1プラグイン）
-│           ├── kanagawa.lua              # 配色
-│           ├── which-key.lua             # キー補助ポップアップ
-│           ├── lualine.lua               # ステータスライン
-│           ├── noice.lua                 # コマンドライン/通知のポップアップ表示
-│           ├── telescope.lua             # ファジー検索
-│           ├── gitsigns.lua              # git 差分表示
-│           ├── fugitive.lua              # git 操作
-│           ├── oil.lua                   # ファイラ
-│           ├── mason.lua                 # LSP サーバー管理
-│           ├── lsp.lua                   # mason-lspconfig + lspconfig（lua_ls）
-│           ├── blink.lua                 # 補完エンジン
-│           ├── lazydev.lua               # Neovim Lua 開発支援
-│           ├── tree-sitter-manager.lua   # treesitterパーサー管理・ハイライト
-│           ├── indent-blankline.lua      # インデントガイド表示
-│           ├── flash.lua                 # ラベルジャンプ(sキー)
-│           ├── nvim-autopairs.lua        # 括弧・クォートの自動閉じ
-│           ├── smart-splits.lua          # nvim分割/weztermペインの移動統合
-│           ├── quicker.lua               # quickfixを編集可能にする
-│           └── render-markdown.lua       # Markdownをバッファ内で装飾表示
-├── powershell/
-│   └── Microsoft.PowerShell_profile.ps1  # PowerShell プロファイル（oh-my-posh・zoxide 初期化・fzf 連携・DeepL翻訳(trans)）→ $PROFILE に symlink
-├── shell/
-│   └── bashrc             # WSL 用 bash 設定（oh-my-posh・zoxide 初期化・fzf キーバインド）
-├── oh-my-posh/
-│   └── kanagawa-wave.omp.json  # プロンプトテーマ（kanagawa.nvim 配色）
-├── winget/
-│   └── install.ps1        # winget で入れるツール一式
-├── apt/
-│   └── install.sh         # 同上の WSL 版
-├── pnpm/
-│   ├── install.ps1        # pnpm グローバルパッケージ
-│   └── install.sh         # 同上の WSL 版（pnpm 本体・Node.js の導入含む）
-└── tools/
-    ├── install.ps1        # winget/pnpm 以外のインストールコマンド（Claude Code CLI 等）
-    └── install.sh         # 同上の WSL 版（Claude Code CLI・ghq）
+├── link.ps1        # 設定ファイルの symlink を張る（冪等）／Windows
+├── link.sh          # 同上／WSL（~/.bashrc への読み込み追記も行う）
+├── wezterm/         # WezTerm 設定
+├── nvim/            # Neovim 設定（Windows/WSL 共通、symlink で共有）
+├── powershell/      # PowerShell プロファイル
+├── shell/           # WSL 用 bash 設定
+├── oh-my-posh/      # プロンプトテーマ
+├── winget/          # winget で入れるツール一式／Windows
+├── apt/             # 同上／WSL
+├── pnpm/            # pnpm グローバルパッケージ導入
+└── tools/           # winget/pnpm 以外のインストール（Claude Code CLI など）
 ```
 
-## 導入の仕方
+各フォルダの詳細は中身を参照。
+
+## 導入手順（Windows）
 
 ### 1. 開発者モードを有効化
 
@@ -73,44 +37,49 @@ git clone https://github.com/tkmrrkn/dotfiles.git "$HOME\dotfiles"
 cd "$HOME\dotfiles"
 ```
 
-### 3. セットアップを実行
+### 3. ツールを導入
 
 ```powershell
-# 主要ツールを winget で入れる
-#   WezTerm / Neovim / PowerShell / ripgrep / Nerd Font /
-#   Git / GitHub CLI(gh) / ghq / Node.js / pnpm / zoxide / fzf / oh-my-posh /
-#   Visual Studio Build Tools(C++ワークロード。treesitterパーサーのビルドに使用) /
-#   PowerToys / Pandoc(:MdToPdf で使用) / FFmpeg / Zen Browser / サクラエディタ / qutebrowser / uv /
-#   gopass / age(gopass の暗号化バックエンド) / TortoiseGit / Browser Tamer
 ./winget/install.ps1
-
-# pwsh を起動（新しいセッションで PATH を反映）
-pwsh -NoLogo
-
-# pnpm グローバル（clasp / tree-sitter-cli）
-./pnpm/install.ps1
-
-# その他（Claude Code CLI など）
-./tools/install.ps1
-
-# 設定ファイルの symlink（冪等・再実行可）
-./link.ps1
 ```
 
-## WSL での導入
+PATH を反映するため、pwsh を開き直す。
+
+```powershell
+./pnpm/install.ps1
+./tools/install.ps1
+```
+
+### 4. 設定ファイルを symlink
+
+```powershell
+./link.ps1   # 冪等・再実行可
+```
+
+## 導入手順（WSL）
 
 nvim 設定は Windows と共通。WezTerm からは Ctrl+a → d で WSL タブを開ける。
 
+### 1. リポジトリを取得
+
 ```bash
-# WSL 内に別途 clone する。/mnt/c への symlink は遅いので使わない。
+# /mnt/c への symlink は遅いので、WSL 内に別途 clone する
 # git が無ければ先に: sudo apt-get install -y git
 git clone https://github.com/tkmrrkn/dotfiles.git ~/dotfiles
 cd ~/dotfiles
+```
 
-./apt/install.sh    # apt で入れるツール一式
-./pnpm/install.sh   # pnpm 本体・Node.js・グローバルパッケージ
-./tools/install.sh  # Claude Code CLI・oh-my-posh・ghq
-./link.sh           # 設定ファイルの symlink（冪等・再実行可）
+### 2. ツールを導入
 
-exec bash           # シェル設定を反映
+```bash
+./apt/install.sh
+./pnpm/install.sh
+./tools/install.sh
+```
+
+### 3. 設定ファイルを symlink
+
+```bash
+./link.sh    # 冪等・再実行可
+exec bash    # シェル設定を反映
 ```
