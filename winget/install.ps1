@@ -23,3 +23,4 @@ winget install --id gopass.gopass -e
 winget install --id FiloSottile.age -e
 winget install --id TortoiseGit.TortoiseGit -e
 winget install --id aloneguid.bt -e
+winget install --id JesseDuffield.lazygit -e
