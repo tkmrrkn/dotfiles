@@ -5,7 +5,7 @@
 # kanagawa.nvim に合わせたテーマでプロンプトを描画。
 # このファイルは link.sh が絶対パスで source するので、BASH_SOURCE からリポジトリのルートを辿る。
 repo_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-eval "$(oh-my-posh init bash --config "$repo_dir/oh-my-posh/kanagawa-wave.omp.json")"
+eval "$(oh-my-posh init bash --config "$repo_dir/oh-my-posh/prompt.omp.json")"
 
 # === zoxide =========================================================
 # `z <部分名>` でよく行くディレクトリへ即移動（frecencyで学習するcd代替）
