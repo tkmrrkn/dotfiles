@@ -1,0 +1,19 @@
+#!/usr/bin/env sh
+# 個人リポジトリに業務用ドメイン名義のコミットが入るのを防ぐ。
+# ~/.gitconfig-personal の core.hooksPath 経由で、includeIf 対象のリポジトリにだけ効く。
+set -eu
+
+hooks_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+email=$(git var GIT_AUTHOR_IDENT | sed -n 's/.*<\(.*\)>.*/\1/p')
+
+while IFS= read -r domain || [ -n "$domain" ]; do
+  case "$domain" in '' | \#*) continue ;; esac
+  case "$email" in
+    *@"$domain")
+      echo "コミット中止: author が業務用ドメインです: $email" >&2
+      echo "  git config user.email <個人のアドレス> で修正するか、" >&2
+      echo "  ~/.gitconfig-personal の includeIf が効いているか確認してください。" >&2
+      exit 1
+      ;;
+  esac
+done <"$hooks_dir/blocked-domains"

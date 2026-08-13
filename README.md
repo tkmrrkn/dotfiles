@@ -16,10 +16,27 @@ dotfiles/
 ├── winget/          # winget で入れるツール一式／Windows
 ├── apt/             # 同上／WSL
 ├── pnpm/            # pnpm グローバルパッケージ導入
-└── tools/           # winget/pnpm 以外のインストール（Claude Code CLI など）
+├── tools/           # winget/pnpm 以外のインストール（Claude Code CLI など）
+└── git/hooks/       # 個人リポジトリ用の git hook（業務メール名義の混入を防ぐ）
 ```
 
 各フォルダの詳細は中身を参照。
+
+## git hook（業務メール名義の混入防止）
+
+個人の公開リポジトリに業務用ドメイン名義のコミットが入るのを防ぐ。`pre-commit` が
+コミット時に、`pre-push` が送信時に author / committer を検査して該当すれば中止する。
+禁止ドメインは `git/hooks/blocked-domains` に1行1件で列挙する。
+
+`~/.gitconfig` の `includeIf` で読み込む個人用設定にだけ `core.hooksPath` を置き、
+業務リポジトリには一切適用しない。有効化は各マシンで1回だけ実行する。
+
+```bash
+git config --file ~/.gitconfig-personal core.hooksPath ~/dotfiles/git/hooks
+```
+
+個人リポジトリを新たに追加するときは、`~/.gitconfig` に `includeIf` を足せば
+名義とフックの両方がまとめて効く。
 
 ## 導入手順（Windows）
 

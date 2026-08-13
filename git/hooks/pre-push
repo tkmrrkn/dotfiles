@@ -1,0 +1,38 @@
+#!/usr/bin/env sh
+# push 対象の履歴に業務用ドメイン名義が無いか検査する最終防衛線。
+# rebase や他マシンから持ち込まれた過去分など、pre-commit をすり抜けた混入も止める。
+set -eu
+
+hooks_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+status=0
+
+while read -r _local_ref local_sha _remote_ref remote_sha; do
+  # SHA が全 0 = ブランチ削除。検査対象なし。
+  case "$local_sha" in *[!0]*) ;; *) continue ;; esac
+
+  # リモート未作成なら、既知のリモートに無いコミットすべてを対象にする。
+  case "$remote_sha" in
+    *[!0]*) range="$remote_sha..$local_sha" ;;
+    *) range="$local_sha --not --remotes" ;;
+  esac
+
+  while IFS= read -r domain || [ -n "$domain" ]; do
+    case "$domain" in '' | \#*) continue ;; esac
+    # author と committer の両方を見る。部分一致だと別ドメイン(...co.jp.example.com)を
+    # 誤検知するので、pre-commit と同じく末尾一致で判定する。
+    hits=$(git log --format='%h %ae %ce' $range | awk -v d="@$domain" '
+      function ends(s) { return length(s) >= length(d) && substr(s, length(s) - length(d) + 1) == d }
+      ends($2) || ends($3) { print "  " $0 }
+    ')
+    if [ -n "$hits" ]; then
+      echo "push 中止: 業務用ドメイン ($domain) 名義のコミットが含まれています。" >&2
+      echo "$hits" >&2
+      status=1
+    fi
+  done <"$hooks_dir/blocked-domains"
+done
+
+if [ "$status" -ne 0 ]; then
+  echo "  git filter-branch などで名義を修正してから push してください。" >&2
+fi
+exit "$status"
