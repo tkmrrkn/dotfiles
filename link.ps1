@@ -8,6 +8,8 @@ $links = @(
   @{ Path = "$env:LOCALAPPDATA\nvim"; Target = "$PSScriptRoot\nvim" }
   @{ Path = $PROFILE;                 Target = "$PSScriptRoot\powershell\Microsoft.PowerShell_profile.ps1" }
   @{ Path = "$HOME\.sqlfluff";        Target = "$PSScriptRoot\sqlfluff\.sqlfluff" }
+  # ディレクトリごとではなくファイル単位。lazygit が同じ場所に state.yml を書くため。
+  @{ Path = "$env:LOCALAPPDATA\lazygit\config.yml"; Target = "$PSScriptRoot\lazygit\config.yml" }
 )
 
 # 作成すべきリンクが残っている場合のみ、symlink 作成権限（開発者モード or 管理者）を要求。

@@ -13,6 +13,7 @@ dotfiles/
 ├── powershell/      # PowerShell プロファイル
 ├── shell/           # WSL 用 bash 設定
 ├── oh-my-posh/      # プロンプトテーマ
+├── lazygit/         # lazygit 設定
 ├── winget/          # winget で入れるツール一式／Windows
 ├── apt/             # 同上／WSL
 ├── pnpm/            # pnpm グローバルパッケージ導入
