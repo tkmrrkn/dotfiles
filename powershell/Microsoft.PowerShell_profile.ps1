@@ -71,3 +71,8 @@ $ExecutionContext.SessionState.InvokeCommand.LocationChangedAction = {
   param($sender, $eventArgs)
   [Environment]::CurrentDirectory = $eventArgs.NewPath.ProviderPath
 }
+
+# === ローカル設定 =========================================
+# $PROFILE と同じ場所に置く。dotfiles管理外なので存在しない環境もある。
+$localProfile = Join-Path (Split-Path $PROFILE -Parent) 'profile.local.ps1'
+if (Test-Path $localProfile) { . $localProfile }
