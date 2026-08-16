@@ -11,6 +11,18 @@ return {
     automatic_enable = { exclude = { "kotlin_language_server" } },
   },
   config = function(_, opts)
+    -- basedpyrightの既定"recommended"はpyrightのstrict相当で、型注釈のない
+    -- 普通のコードでも警告が大量に出るためstandardに落とす。
+    vim.lsp.config("basedpyright", {
+      settings = {
+        basedpyright = {
+          analysis = {
+            typeCheckingMode = "standard",
+          },
+        },
+      },
+    })
+
     require("mason-lspconfig").setup(opts)
 
     -- kotlin-language-server (fwcd) fails to resolve the classpath when
