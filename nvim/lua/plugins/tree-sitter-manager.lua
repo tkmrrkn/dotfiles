@@ -11,6 +11,7 @@ return {
         "javascript",
         "typescript",
         "python",
+        "php",
         "bash",
         "kotlin",
         "sql",
