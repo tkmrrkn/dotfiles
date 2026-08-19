@@ -10,6 +10,8 @@ $links = @(
   @{ Path = "$HOME\.sqlfluff";        Target = "$PSScriptRoot\sqlfluff\.sqlfluff" }
   # ディレクトリごとではなくファイル単位。lazygit が同じ場所に state.yml を書くため。
   @{ Path = "$env:LOCALAPPDATA\lazygit\config.yml"; Target = "$PSScriptRoot\lazygit\config.yml" }
+  # kanata_gui は実行ファイルと同じフォルダの kanata.kbd を自動で読み込む。
+  @{ Path = "$env:LOCALAPPDATA\Microsoft\WinGet\Packages\jtroo.kanata_gui_Microsoft.Winget.Source_8wekyb3d8bbwe\kanata.kbd"; Target = "$PSScriptRoot\kanata\kanata.kbd" }
 )
 
 # 作成すべきリンクが残っている場合のみ、symlink 作成権限（開発者モード or 管理者）を要求。

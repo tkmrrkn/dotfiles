@@ -24,3 +24,4 @@ winget install --id FiloSottile.age -e
 winget install --id TortoiseGit.TortoiseGit -e
 winget install --id aloneguid.bt -e
 winget install --id JesseDuffield.lazygit -e
+winget install --id jtroo.kanata_gui -e
