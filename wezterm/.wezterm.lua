@@ -120,7 +120,6 @@ config.keys = {
 
 	-- --- ワークスペース ---
 	{ key = "w", mods = "LEADER", action = act.EmitEvent("workspace-launcher") }, -- 開く/切替を1つの一覧で
-	{ key = "m", mods = "LEADER", action = act.EmitEvent("open-main-workspace") }, -- dotfiles+メモの定位置
 
 	-- --- ワークスペースをリネーム（tmuxの prefix + $ と同じ）---
 	{
@@ -297,34 +296,20 @@ wezterm.on("workspace-launcher", function(window, pane)
 	)
 end)
 
--- === 定位置ワークスペース: dotfilesシェル + メモ（Ctrl+a → m）=======
--- SwitchToWorkspaceは既存ワークスペースにタブを足さないので、無いときだけ2タブを組み立てる。
-wezterm.on("open-main-workspace", function(window, pane)
-	local name = "main"
+-- === 起動時の定位置: dotfilesシェル + メモ ==========================
+-- defaultワークスペースに置く。リポジトリを開く前の起点をここが兼ねる。
+wezterm.on("gui-startup", function()
+	local dotfiles_tab, _, win = wezterm.mux.spawn_window({
+		cwd = wezterm.home_dir .. "\\dotfiles",
+		args = { "pwsh.exe", "-NoLogo" },
+	})
+	dotfiles_tab:set_title("dotfiles")
 
-	local exists = false
-	for _, w in ipairs(wezterm.mux.get_workspace_names()) do
-		if w == name then
-			exists = true
-			break
-		end
-	end
+	-- dotfiles配下のnvimディレクトリを実行ファイルと誤解決させないため拡張子まで書く
+	local scratch_tab = win:spawn_tab({ cwd = wezterm.home_dir, args = { "nvim.exe", scratch_file } })
+	scratch_tab:set_title("scratch")
 
-	if not exists then
-		local dotfiles_tab, _, win = wezterm.mux.spawn_window({
-			workspace = name,
-			cwd = wezterm.home_dir .. "\\dotfiles",
-			args = { "pwsh.exe", "-NoLogo" },
-		})
-		dotfiles_tab:set_title("dotfiles")
-
-		local scratch_tab = win:spawn_tab({ cwd = wezterm.home_dir, args = { "nvim", scratch_file } })
-		scratch_tab:set_title("scratch")
-
-		dotfiles_tab:activate()
-	end
-
-	window:perform_action(act.SwitchToWorkspace({ name = name }), pane)
+	dotfiles_tab:activate()
 end)
 
 -- === Claude Code ステータス =========================================
