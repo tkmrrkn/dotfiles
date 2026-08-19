@@ -119,9 +119,28 @@ config.keys = {
 	{ key = "d", mods = "LEADER", action = act.ShowLauncherArgs({ flags = "FUZZY|DOMAINS" }) },
 
 	-- --- ワークスペース ---
-	{ key = "g", mods = "LEADER", action = act.EmitEvent("ghq-open-workspace") }, -- ghqから開く
-	{ key = "w", mods = "LEADER", action = act.ShowLauncherArgs({ flags = "FUZZY|WORKSPACES" }) }, -- 開いている中から切替
+	{ key = "w", mods = "LEADER", action = act.EmitEvent("workspace-launcher") }, -- 開く/切替を1つの一覧で
 	{ key = "m", mods = "LEADER", action = act.EmitEvent("open-main-workspace") }, -- dotfiles+メモの定位置
+
+	-- --- ワークスペースをリネーム（tmuxの prefix + $ と同じ）---
+	{
+		key = "$",
+		mods = "LEADER|SHIFT",
+		action = wezterm.action_callback(function(window, pane)
+			window:perform_action(
+				act.PromptInputLine({
+					description = "ワークスペース名",
+					initial_value = window:active_workspace(),
+					action = wezterm.action_callback(function(win, _, line)
+						if line and line ~= "" then
+							wezterm.mux.rename_workspace(win:active_workspace(), line)
+						end
+					end),
+				}),
+				pane
+			)
+		end),
+	},
 
 	-- --- Quick Select上書き（Ctrl+Shift+Space）---
 	-- 常にコピーした上で、URLやWindowsのフルパス（コマンド出力等に出てくる本物のパス）なら追加で開く。
@@ -201,28 +220,76 @@ config.keys = {
 	},
 }
 
--- === ghq: リポジトリを選んでワークスペースを開く（Ctrl+a → g）=========
--- ghq はPATHにある前提（PATH更新後にweztermを起動し直せば認識される）。
-wezterm.on("ghq-open-workspace", function(window, pane)
-	local ok, stdout = wezterm.run_child_process({ "ghq", "list", "--full-path" })
-	if not ok then
-		return
+-- === ワークスペース: 開く/切替を1つの一覧に統合（Ctrl+a → w）=========
+-- 開いているものを上、ghqの未オープンリポジトリを下に並べる。ghqはPATHにある前提。
+
+-- ghqのフルパスを namespace(github.com/owner など)とリポジトリ名に分ける
+local function ghq_split(path)
+	local segs = {}
+	for seg in path:gmatch("[^/\\]+") do
+		table.insert(segs, seg)
 	end
-	local choices = {}
-	for _, path in ipairs(wezterm.split_by_newlines(stdout)) do
-		local p = path:gsub("%s+$", "") -- 末尾の空白/CRを除去
-		if p ~= "" then
-			table.insert(choices, { id = p, label = p:gsub(".*[/\\]", "") })
+	-- ghqルートより手前(ドライブレターなど)は表示に不要なので捨てる
+	local root = 0
+	for i, seg in ipairs(segs) do
+		if seg == "ghq" then
+			root = i
 		end
 	end
+	local repo = table.remove(segs)
+	return table.concat(segs, "/", root + 1), repo
+end
+
+wezterm.on("workspace-launcher", function(window, pane)
+	local active = window:active_workspace()
+	local choices, open = {}, {}
+
+	for _, name in ipairs(wezterm.mux.get_workspace_names()) do
+		open[name] = true
+		table.insert(choices, { id = "ws\t" .. name, label = (name == active and "● " or "○ ") .. name })
+	end
+
+	local ok, stdout = wezterm.run_child_process({ "ghq", "list", "--full-path" })
+	if ok then
+		local repos, basename_count = {}, {}
+		for _, path in ipairs(wezterm.split_by_newlines(stdout)) do
+			local full = path:gsub("%s+$", "") -- 末尾の空白/CRを除去
+			if full ~= "" then
+				local ns, repo = ghq_split(full)
+				basename_count[repo] = (basename_count[repo] or 0) + 1
+				table.insert(repos, { path = full, repo = repo, ns = ns })
+			end
+		end
+		for _, r in ipairs(repos) do
+			-- 同名リポジトリが複数あるときだけ owner/repo にして名前の衝突を避ける
+			local name = r.repo
+			if basename_count[r.repo] > 1 then
+				name = r.ns:gsub(".*/", "") .. "/" .. r.repo
+			end
+			if not open[name] then
+				table.insert(choices, {
+					id = "new\t" .. name .. "\t" .. r.path,
+					label = "  " .. r.repo .. "  " .. r.ns,
+				})
+			end
+		end
+	end
+
 	window:perform_action(
 		act.InputSelector({
-			title = "ghq: 開くリポジトリ",
+			title = "ワークスペース",
 			choices = choices,
 			fuzzy = true,
-			action = wezterm.action_callback(function(win, p, id, label)
-				if id then
-					win:perform_action(act.SwitchToWorkspace({ name = label, spawn = { cwd = id } }), p)
+			action = wezterm.action_callback(function(win, p, id)
+				if not id then
+					return
+				end
+				local kind, rest = id:match("^(%a+)\t(.*)$")
+				if kind == "ws" then
+					win:perform_action(act.SwitchToWorkspace({ name = rest }), p)
+				else
+					local name, cwd = rest:match("^(.-)\t(.*)$")
+					win:perform_action(act.SwitchToWorkspace({ name = name, spawn = { cwd = cwd } }), p)
 				end
 			end),
 		}),
@@ -340,10 +407,12 @@ wezterm.on("format-window-title", function(tab, pane, tabs, panes, config)
 	end
 
 	local title = tab.active_pane and tab.active_pane.title or "wezterm"
+	-- タブ1枚だとタブバーが隠れるので、ワークスペース名の表示先はタイトルバーだけ
+	local prefix = current_workspace and (current_workspace .. " | ") or ""
 	if #parts > 0 then
-		return table.concat(parts, " | ") .. " | " .. title
+		return prefix .. table.concat(parts, " | ") .. " | " .. title
 	end
-	return title
+	return prefix .. title
 end)
 
 return config
