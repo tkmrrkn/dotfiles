@@ -56,6 +56,9 @@ local act = wezterm.action
 -- リポジトリには含めない。ファイルが存在しないマシンでもエラーにならないようにする。
 local quickview_image = wezterm.home_dir .. "\\dotfiles\\wezterm\\assets\\F1.png"
 
+-- === メモ ===========================================================
+local scratch_file = wezterm.home_dir .. "\\scratch.md"
+
 -- === smart-splits.nvim連携: Ctrl+hjklでnvimの分割とweztermのペインを継ぎ目なく移動 ===
 -- nvim側がsmart-splits.nvimでユーザー変数 IS_NVIM を自動セット/解除してくれるので、
 -- それを見て「nvim実行中ならキーをそのまま転送」「そうでなければweztermがペイン移動」を切り替える。
@@ -118,6 +121,7 @@ config.keys = {
 	-- --- ワークスペース ---
 	{ key = "g", mods = "LEADER", action = act.EmitEvent("ghq-open-workspace") }, -- ghqから開く
 	{ key = "w", mods = "LEADER", action = act.ShowLauncherArgs({ flags = "FUZZY|WORKSPACES" }) }, -- 開いている中から切替
+	{ key = "m", mods = "LEADER", action = act.EmitEvent("open-main-workspace") }, -- dotfiles+メモの定位置
 
 	-- --- Quick Select上書き（Ctrl+Shift+Space）---
 	-- 常にコピーした上で、URLやWindowsのフルパス（コマンド出力等に出てくる本物のパス）なら追加で開く。
@@ -224,6 +228,36 @@ wezterm.on("ghq-open-workspace", function(window, pane)
 		}),
 		pane
 	)
+end)
+
+-- === 定位置ワークスペース: dotfilesシェル + メモ（Ctrl+a → m）=======
+-- SwitchToWorkspaceは既存ワークスペースにタブを足さないので、無いときだけ2タブを組み立てる。
+wezterm.on("open-main-workspace", function(window, pane)
+	local name = "main"
+
+	local exists = false
+	for _, w in ipairs(wezterm.mux.get_workspace_names()) do
+		if w == name then
+			exists = true
+			break
+		end
+	end
+
+	if not exists then
+		local dotfiles_tab, _, win = wezterm.mux.spawn_window({
+			workspace = name,
+			cwd = wezterm.home_dir .. "\\dotfiles",
+			args = { "pwsh.exe", "-NoLogo" },
+		})
+		dotfiles_tab:set_title("dotfiles")
+
+		local scratch_tab = win:spawn_tab({ cwd = wezterm.home_dir, args = { "nvim", scratch_file } })
+		scratch_tab:set_title("scratch")
+
+		dotfiles_tab:activate()
+	end
+
+	window:perform_action(act.SwitchToWorkspace({ name = name }), pane)
 end)
 
 -- === Claude Code ステータス =========================================
