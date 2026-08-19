@@ -121,26 +121,6 @@ config.keys = {
 	-- --- ワークスペース ---
 	{ key = "w", mods = "LEADER", action = act.EmitEvent("workspace-launcher") }, -- 開く/切替を1つの一覧で
 
-	-- --- ワークスペースをリネーム（tmuxの prefix + $ と同じ）---
-	{
-		key = "$",
-		mods = "LEADER|SHIFT",
-		action = wezterm.action_callback(function(window, pane)
-			window:perform_action(
-				act.PromptInputLine({
-					description = "ワークスペース名",
-					initial_value = window:active_workspace(),
-					action = wezterm.action_callback(function(win, _, line)
-						if line and line ~= "" then
-							wezterm.mux.rename_workspace(win:active_workspace(), line)
-						end
-					end),
-				}),
-				pane
-			)
-		end),
-	},
-
 	-- --- Quick Select上書き（Ctrl+Shift+Space）---
 	-- 常にコピーした上で、URLやWindowsのフルパス（コマンド出力等に出てくる本物のパス）なら追加で開く。
 	-- ※ oh-my-poshのプロンプト自体は "style": "letter" で末尾以外のフォルダ名を1文字に省略表示するため
