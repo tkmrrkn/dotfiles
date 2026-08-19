@@ -27,6 +27,11 @@ config.use_fancy_tab_bar = true
 config.hide_tab_bar_if_only_one_tab = true
 config.tab_bar_at_bottom = false
 
+-- タブ名は番号だけにする。プロセス名やパスが出ても識別に使えないため。
+wezterm.on("format-tab-title", function(tab)
+	return " " .. tostring(tab.tab_index + 1) .. " "
+end)
+
 -- === その他 =========================================================
 config.scrollback_lines = 10000
 config.audible_bell = "Disabled"
@@ -283,11 +288,9 @@ wezterm.on("gui-startup", function()
 		cwd = wezterm.home_dir .. "\\dotfiles",
 		args = { "pwsh.exe", "-NoLogo" },
 	})
-	dotfiles_tab:set_title("dotfiles")
 
 	-- dotfiles配下のnvimディレクトリを実行ファイルと誤解決させないため拡張子まで書く
-	local scratch_tab = win:spawn_tab({ cwd = wezterm.home_dir, args = { "nvim.exe", scratch_file } })
-	scratch_tab:set_title("scratch")
+	win:spawn_tab({ cwd = wezterm.home_dir, args = { "nvim.exe", scratch_file } })
 
 	dotfiles_tab:activate()
 end)
