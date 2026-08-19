@@ -44,9 +44,9 @@ wezterm.on("toggle-opacity", function(window, pane)
 end)
 
 -- === tmux風: リーダーキー + ペイン/ワークスペース =====================
--- tmuxの prefix に相当する「リーダーキー」を Ctrl+a に設定。Ctrl+a に続けて下のキーを押す。
--- ※ pwsh の Ctrl+a(行頭移動) が潰れるが、リーダー→Ctrl+a で従来通り送れるようにしてある。
-config.leader = { key = "a", mods = "CTRL" }
+-- tmuxの prefix に相当する「リーダーキー」を Ctrl+Space に設定。続けて下のキーを押す。
+-- ※ 潰れる Ctrl+Space(PSReadLineの補完メニュー) は リーダー→Ctrl+Space で従来通り送れる。
+config.leader = { key = "Space", mods = "CTRL" }
 
 local act = wezterm.action
 
@@ -97,8 +97,8 @@ config.keys = {
 	-- 透過トグル（既存）
 	{ key = "O", mods = "CTRL|SHIFT", action = act.EmitEvent("toggle-opacity") },
 
-	-- リーダー→Ctrl+a で本来の Ctrl+a を送る（pwshの行頭移動などを温存）
-	{ key = "a", mods = "LEADER|CTRL", action = act.SendKey({ key = "a", mods = "CTRL" }) },
+	-- リーダー→Ctrl+Space で本来の Ctrl+Space を送る（PSReadLineの補完メニューなどを温存）
+	{ key = "Space", mods = "LEADER|CTRL", action = act.SendKey({ key = "Space", mods = "CTRL" }) },
 
 	-- --- ペイン分割（nvimの :vsplit / :split と同じ感覚）---
 	{ key = "v", mods = "LEADER", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) }, -- 左右に分割
@@ -199,7 +199,7 @@ config.keys = {
 	},
 }
 
--- === ワークスペース: 開く/切替を1つの一覧に統合（Ctrl+a → w）=========
+-- === ワークスペース: 開く/切替を1つの一覧に統合（Ctrl+Space → w）=====
 -- 開いているものを上、ghqの未オープンリポジトリを下に並べる。ghqはPATHにある前提。
 
 -- ghqのフルパスを namespace(github.com/owner など)とリポジトリ名に分ける

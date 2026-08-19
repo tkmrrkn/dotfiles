@@ -76,7 +76,7 @@ PATH を反映するため、pwsh を開き直す。
 
 ## 導入手順（WSL）
 
-nvim 設定は Windows と共通。WezTerm からは Ctrl+a → d で WSL タブを開ける。
+nvim 設定は Windows と共通。WezTerm からは Ctrl+Space → d で WSL タブを開ける。
 
 ### 1. リポジトリを取得
 
