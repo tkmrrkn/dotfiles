@@ -16,8 +16,8 @@ PowerToys には kanata の tap-hold がないので、「単独押しは文字�
 
 ## 注意
 
-このリマップは PowerToys 起動中のみ有効。ログオン画面や PowerToys 停止中は CapsLock が通常動作に戻る。
-常時無効にしたい場合はレジストリの Scancode Map で置き換える。
+GUI で編集して保存すると、symlink 越しに dotfiles 側の実体がそのまま上書きされる。
+書式も PowerToys 独自の minify 形式になるので、GUI を使った後は必ず git diff を見る。
 
-GUI で編集して保存すると `default.json` が置き換えられ symlink が外れることがある。
-その場合は `link.ps1` を再実行する。直接編集した変更が反映されないときは PowerToys を再起動する。
+直接編集した変更は PowerToys の再起動まで反映されない。
+このリマップは PowerToys 起動中のみ有効で、ログオン画面や停止中は CapsLock が通常動作に戻る。
