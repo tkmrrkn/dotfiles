@@ -10,6 +10,8 @@ $links = @(
   @{ Path = "$HOME\.sqlfluff";        Target = "$PSScriptRoot\sqlfluff\.sqlfluff" }
   # ディレクトリごとではなくファイル単位。lazygit が同じ場所に state.yml を書くため。
   @{ Path = "$env:LOCALAPPDATA\lazygit\config.yml"; Target = "$PSScriptRoot\lazygit\config.yml" }
+  # PowerToys が同フォルダに settings.json を書くためファイル単位。GUI 保存で外れたら再実行。
+  @{ Path = "$env:LOCALAPPDATA\Microsoft\PowerToys\Keyboard Manager\default.json"; Target = "$PSScriptRoot\powertoys\keyboard-manager\default.json" }
 )
 
 # 作成すべきリンクが残っている場合のみ、symlink 作成権限（開発者モード or 管理者）を要求。
