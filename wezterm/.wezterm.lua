@@ -312,8 +312,39 @@ end
 -- window_id -> workspace名。update-statusはwindowオブジェクトを直接渡すので検索不要。
 local workspace_by_window_id = {}
 
+-- cwd -> workspace名。claude agentsはcwdしか返さないので、muxのペインを走査して対応表を作る。
+local workspace_by_cwd = {}
+
+local function normalize_cwd(path)
+	return (path:gsub("^/(%a:)", "%1"):gsub("/", "\\"):gsub("\\+$", ""):lower())
+end
+
+-- ペインのフォアグラウンドがclaude本体ならそのcwdはclaude agentsのcwdと一致する
+local function refresh_workspace_by_cwd()
+	local map = {}
+	for _, win in ipairs(wezterm.mux.all_windows()) do
+		local ws = win:get_workspace()
+		for _, t in ipairs(win:tabs()) do
+			for _, p in ipairs(t:panes()) do
+				-- LEADER+eと同じ理由でget_foreground_process_infoを優先し、OSC7は保険
+				local proc = p.get_foreground_process_info and p:get_foreground_process_info()
+				local cwd = proc and proc.cwd
+				if not cwd then
+					local dir = p:get_current_working_dir()
+					cwd = dir and dir.file_path
+				end
+				if cwd then
+					map[normalize_cwd(cwd)] = ws
+				end
+			end
+		end
+	end
+	workspace_by_cwd = map
+end
+
 wezterm.on("update-status", function(window, pane)
 	refresh_claude_agents()
+	refresh_workspace_by_cwd()
 	workspace_by_window_id[window:window_id()] = window:active_workspace()
 end)
 
@@ -336,51 +367,51 @@ local function claude_bucket(entry)
 	return entry.status
 end
 
--- cwdの末尾ディレクトリ名。ghq-open-workspaceの運用ではこれがworkspace名と一致する。
-local function repo_name_from_cwd(cwd)
-	return (cwd:gsub("[/\\]+$", ""):gsub(".*[/\\]", ""))
+-- 対応表に無いcwd(親が終了した後のbackground等)はディレクトリ名で代用する
+local function workspace_name_from_cwd(cwd)
+	return workspace_by_cwd[normalize_cwd(cwd)] or (cwd:gsub("[/\\]+$", ""):gsub(".*[/\\]", ""))
 end
 
 wezterm.on("format-window-title", function(tab, pane, tabs, panes, config)
 	local current_workspace = workspace_by_window_id[tab.window_id]
 
-	-- リポジトリ名ごとにbucket件数をまとめる(同じリポジトリで複数セッションが動くこともあるため)
-	local counts_by_repo = {}
-	local repo_order = {}
+	-- ワークスペース名ごとにbucket件数をまとめる(1つのワークスペースで複数セッションが動くこともあるため)
+	local counts_by_workspace = {}
+	local workspace_order = {}
+	-- タブ1枚だとタブバーが隠れるので、現在のワークスペース名は件数0でも先頭に出す
+	if current_workspace then
+		counts_by_workspace[current_workspace] = { busy = 0, waiting = 0, idle = 0 }
+		table.insert(workspace_order, current_workspace)
+	end
 	for _, entry in ipairs(claude_agents) do
 		local bucket = claude_bucket(entry)
 		if bucket then
-			local repo_name = repo_name_from_cwd(entry.cwd)
-			if not counts_by_repo[repo_name] then
-				counts_by_repo[repo_name] = { busy = 0, waiting = 0, idle = 0 }
-				table.insert(repo_order, repo_name)
+			local ws = workspace_name_from_cwd(entry.cwd)
+			if not counts_by_workspace[ws] then
+				counts_by_workspace[ws] = { busy = 0, waiting = 0, idle = 0 }
+				table.insert(workspace_order, ws)
 			end
-			counts_by_repo[repo_name][bucket] = counts_by_repo[repo_name][bucket] + 1
+			counts_by_workspace[ws][bucket] = counts_by_workspace[ws][bucket] + 1
 		end
 	end
 
 	local parts = {}
-	for _, repo_name in ipairs(repo_order) do
-		local counts = counts_by_repo[repo_name]
-		local label = repo_name .. " "
+	for _, ws in ipairs(workspace_order) do
+		local counts = counts_by_workspace[ws]
+		local icons = ""
 		for _, status in ipairs({ "waiting", "busy", "idle" }) do
 			if counts[status] > 0 then
-				label = label .. CLAUDE_STATUS_DISPLAY[status] .. tostring(counts[status])
+				icons = icons .. CLAUDE_STATUS_DISPLAY[status] .. tostring(counts[status])
 			end
 		end
-		if repo_name == current_workspace then
-			label = "[" .. label .. "]"
-		end
-		table.insert(parts, label)
+		table.insert(parts, icons ~= "" and (ws .. " " .. icons) or ws)
 	end
 
 	local title = tab.active_pane and tab.active_pane.title or "wezterm"
-	-- タブ1枚だとタブバーが隠れるので、ワークスペース名の表示先はタイトルバーだけ
-	local prefix = current_workspace and (current_workspace .. " | ") or ""
 	if #parts > 0 then
-		return prefix .. table.concat(parts, " | ") .. " | " .. title
+		return table.concat(parts, " | ") .. " | " .. title
 	end
-	return prefix .. title
+	return title
 end)
 
 return config
