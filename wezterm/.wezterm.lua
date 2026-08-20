@@ -309,8 +309,14 @@ local function refresh_claude_agents()
 	claude_agents = wezterm.json_parse(stdout) or {}
 end
 
--- window_id -> workspace名。update-statusはwindowオブジェクトを直接渡すので検索不要。
-local workspace_by_window_id = {}
+-- ワークスペース名はmuxから同期で引く。update-statusのキャッシュ経由だと開いた直後に間に合わず名前が消える。
+local function workspace_of_window(window_id)
+	for _, win in ipairs(wezterm.mux.all_windows()) do
+		if win:window_id() == window_id then
+			return win:get_workspace()
+		end
+	end
+end
 
 -- cwd -> workspace名。claude agentsはcwdしか返さないので、muxのペインを走査して対応表を作る。
 local workspace_by_cwd = {}
@@ -319,33 +325,49 @@ local function normalize_cwd(path)
 	return (path:gsub("^/(%a:)", "%1"):gsub("/", "\\"):gsub("\\+$", ""):lower())
 end
 
--- ペインのフォアグラウンドがclaude本体ならそのcwdはclaude agentsのcwdと一致する
+-- get_foreground_process_infoは正確だがプロセス走査が重い。まず無料のOSC7で埋め、
+-- claude側のcwdが埋まらなかったときだけ問い合わせる。
 local function refresh_workspace_by_cwd()
 	local map = {}
+	if #claude_agents == 0 then
+		workspace_by_cwd = map
+		return
+	end
+
+	local panes = {}
 	for _, win in ipairs(wezterm.mux.all_windows()) do
 		local ws = win:get_workspace()
 		for _, t in ipairs(win:tabs()) do
 			for _, p in ipairs(t:panes()) do
-				-- LEADER+eと同じ理由でget_foreground_process_infoを優先し、OSC7は保険
-				local proc = p.get_foreground_process_info and p:get_foreground_process_info()
-				local cwd = proc and proc.cwd
-				if not cwd then
-					local dir = p:get_current_working_dir()
-					cwd = dir and dir.file_path
-				end
+				table.insert(panes, { pane = p, ws = ws })
+				local dir = p:get_current_working_dir()
+				local cwd = dir and dir.file_path
 				if cwd then
 					map[normalize_cwd(cwd)] = ws
 				end
 			end
 		end
 	end
+
+	for _, entry in ipairs(claude_agents) do
+		if not map[normalize_cwd(entry.cwd)] then
+			-- OSC7は最後のプロンプト時点のcwdなので、claude実行中のペインでは実cwdとずれる
+			for _, item in ipairs(panes) do
+				local proc = item.pane.get_foreground_process_info and item.pane:get_foreground_process_info()
+				if proc and proc.cwd then
+					map[normalize_cwd(proc.cwd)] = item.ws
+				end
+			end
+			break
+		end
+	end
+
 	workspace_by_cwd = map
 end
 
-wezterm.on("update-status", function(window, pane)
+wezterm.on("update-status", function()
 	refresh_claude_agents()
 	refresh_workspace_by_cwd()
-	workspace_by_window_id[window:window_id()] = window:active_workspace()
 end)
 
 local CLAUDE_STATUS_DISPLAY = {
@@ -373,24 +395,30 @@ local function workspace_name_from_cwd(cwd)
 end
 
 wezterm.on("format-window-title", function(tab, pane, tabs, panes, config)
-	local current_workspace = workspace_by_window_id[tab.window_id]
+	local current_workspace = workspace_of_window(tab.window_id)
 
 	-- ワークスペース名ごとにbucket件数をまとめる(1つのワークスペースで複数セッションが動くこともあるため)
 	local counts_by_workspace = {}
 	local workspace_order = {}
-	-- タブ1枚だとタブバーが隠れるので、現在のワークスペース名は件数0でも先頭に出す
+	local function ensure_workspace(ws)
+		if not counts_by_workspace[ws] then
+			counts_by_workspace[ws] = { busy = 0, waiting = 0, idle = 0 }
+			table.insert(workspace_order, ws)
+		end
+	end
+
+	-- 開いているワークスペースは件数0でも全部並べる。今いるものを先頭にして現在位置がわかるようにする。
 	if current_workspace then
-		counts_by_workspace[current_workspace] = { busy = 0, waiting = 0, idle = 0 }
-		table.insert(workspace_order, current_workspace)
+		ensure_workspace(current_workspace)
+	end
+	for _, ws in ipairs(wezterm.mux.get_workspace_names()) do
+		ensure_workspace(ws)
 	end
 	for _, entry in ipairs(claude_agents) do
 		local bucket = claude_bucket(entry)
 		if bucket then
 			local ws = workspace_name_from_cwd(entry.cwd)
-			if not counts_by_workspace[ws] then
-				counts_by_workspace[ws] = { busy = 0, waiting = 0, idle = 0 }
-				table.insert(workspace_order, ws)
-			end
+			ensure_workspace(ws)
 			counts_by_workspace[ws][bucket] = counts_by_workspace[ws][bucket] + 1
 		end
 	end
