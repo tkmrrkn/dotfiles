@@ -14,7 +14,7 @@ dotfiles/
 ├── shell/           # WSL 用 bash 設定
 ├── oh-my-posh/      # プロンプトテーマ
 ├── lazygit/         # lazygit 設定
-├── powertoys/       # PowerToys Keyboard Manager のキーリマップ／Windows
+├── keyboard/        # CapsLock を左 Ctrl にする Scancode Map／Windows
 ├── winget/          # winget で入れるツール一式／Windows
 ├── apt/             # 同上／WSL
 ├── pnpm/            # pnpm グローバルパッケージ導入
@@ -75,14 +75,13 @@ PATH を反映するため、pwsh を開き直す。
 ./link.ps1   # 冪等・再実行可
 ```
 
-### 5. PowerToys を再起動
+### 5. キーリマップを適用
 
-起動中の PowerToys は後から張った symlink を読まないため、キーリマップがその場では効かない。
-次回ログオンでも反映されるが、すぐ使うなら再起動する。
+CapsLock を左 Ctrl にする Scancode Map をレジストリに書き込む。管理者権限の pwsh で実行し、
+再起動して反映する。
 
 ```powershell
-Stop-Process -Name PowerToys -Force
-Start-Process "$env:LOCALAPPDATA\PowerToys\PowerToys.exe"
+./keyboard/install.ps1
 ```
 
 ## 導入手順（WSL）
