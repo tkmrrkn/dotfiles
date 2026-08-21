@@ -75,6 +75,16 @@ PATH を反映するため、pwsh を開き直す。
 ./link.ps1   # 冪等・再実行可
 ```
 
+### 5. PowerToys を再起動
+
+起動中の PowerToys は後から張った symlink を読まないため、キーリマップがその場では効かない。
+次回ログオンでも反映されるが、すぐ使うなら再起動する。
+
+```powershell
+Stop-Process -Name PowerToys -Force
+Start-Process "$env:LOCALAPPDATA\PowerToys\PowerToys.exe"
+```
+
 ## 導入手順（WSL）
 
 nvim 設定は Windows と共通。WezTerm からは Ctrl+Space → d で WSL タブを開ける。
