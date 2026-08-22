@@ -10,9 +10,10 @@ allowed-tools: Bash(ls:*), Bash(cat:*), Bash(stat:*), Bash(date:*), Bash(git log
 
 1. `~/.claude/CLAUDE.md` — 全プロジェクト共通のルール。各項目に `[rule-id]` が付いている
 2. カレントディレクトリから上へ辿って見つかる `CLAUDE.md` — プロジェクト固有のルール
-3. `~/.claude/projects/<エンコード名>/memory/` の `MEMORY.md` と各ノート
+3. `~/.claude/projects/<エンコード名>/memory/` のノートのうち frontmatter が `type: feedback` または `type: user` のもの
    - エンコード規則: カレントパスの区切りとコロンを `-` に置換する
      例) `C:\Users\x\dotfiles` → `C--Users-x-dotfiles`
+   - `type: project` は決定・発見であって規則ではないため除外する（`decisions` スキルの担当）
 4. `~/.claude/settings.json` のうち動作に影響する項目（language, model, permissions, hooks など）
 5. `~/.claude/skills/` と `~/.claude/commands/` にあるカスタムスキル・コマンド
 
@@ -26,6 +27,7 @@ allowed-tools: Bash(ls:*), Bash(cat:*), Bash(stat:*), Bash(date:*), Bash(git log
 | ID | 規則（1行要約） | 出典 | 最終更新 |
 
 - ID を持たない規則（プロジェクトメモリ等）は ID 欄を `—` にし、出典のファイル名で識別する
+- メモリは英語で保存されている。要約は日本語にして表示する
 - 規則の全文は展開しない。1行に要約し、一覧性を優先する
 - 最終更新から90日以上経っているものには ⚠ を付ける
 - 内容が矛盾する規則、または効いていない可能性のあるもの（存在しないパスを指す、
