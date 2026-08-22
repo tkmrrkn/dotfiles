@@ -1,35 +1,40 @@
 ---
 name: decisions
-description: このプロジェクトで過去に決めたこと・調べて分かったことを一覧する。「なぜこうなっている？」「前に何を決めたか」「同じ検討を繰り返していないか」を確認したいときや、却下済みの案を思い出したいときに使う。引数に語句を渡すと、その主題の詳細だけを表示する。
+description: List what was decided and what was discovered in this project. Use when asked why something is the way it is, what was decided before, whether the same question is being re-litigated, or to recall an option that was already rejected. Given a term as an argument, show only that topic in detail.
 allowed-tools: Bash(ls:*), Bash(cat:*), Bash(stat:*), Bash(date:*), Bash(grep:*), Bash(wc:*), Read, Glob, Grep
 ---
 
-このプロジェクトの決定と発見を一覧にする。読み取りのみ。ファイルは変更しない。
+List this project's decisions and findings. Read-only — never modify a file.
 
-規則（守るべき指針）は扱わない。それは `rules` スキルの担当。
+**Render the entire output in Japanese**, including table headers, even though this file is written in English.
 
-## 調べる場所
+Rules — the guidance to be followed — are out of scope here; the `rules` skill covers those.
 
-`~/.claude/projects/<エンコード名>/memory/` のノートのうち、frontmatter が `type: project` のものだけ。
+## Where to look
 
-- エンコード規則: カレントパスの区切りとコロンを `-` に置換する
-  例) `C:\Users\x\dotfiles` → `C--Users-x-dotfiles`
-- `type: feedback` と `type: user` は規則なので除外する（`rules` 側で扱う）
-- `MEMORY.md` は目次。本文は各ノートを読む
+Only notes under `~/.claude/projects/<encoded-name>/memory/` whose frontmatter is `type: project`.
 
-## 表示
+- Encoding: replace path separators and the drive colon with `-`.
+  e.g. `C:\Users\x\dotfiles` becomes `C--Users-x-dotfiles`
+- Exclude `type: feedback` and `type: user` — those are rules, handled by the `rules` skill.
+- `MEMORY.md` is the index; read each note for its body.
 
-**ノートは英語で保存されている。表示は日本語に変換する。** ただしユーザーの発言の引用は日本語のまま保存されているので、そのまま引用として出す。
+## Output
 
-主題ごとに次を示す。
+Notes are stored entirely in English. Translate them into Japanese for display.
 
-| 主題 | 現在の結論 | 却下した案 | 最終更新 |
+One section per topic, not a table — the number of rejected options varies wildly between topics and a fixed-column table crushes them together.
 
-- 「却下した案」には理由を1行で添える。ここが再提案を防ぐための核心なので省略しない
-- 制約や罠（`[mem-finding]` で書かれたもの）は結論欄にその内容を書き、却下案の欄は `—` にする
-- 最終更新は git 管理外なのでファイルの mtime を使う
-- 最後に、主題の総数と `MEMORY.md` の概算文字数を1行で示す（目次は毎セッション自動注入されるため、肥大していないかの目安になる）
+Each section is a level-2 heading carrying the topic name, its slug and its last-modified date, then:
 
-## 引数
+- A **conclusion** line: what currently holds.
+- A **rejected** list, one bullet per option, each as "option — one-line reason". This is the core of what stops the same proposal coming back — never omit a reason. Omit the whole list when there is nothing rejected.
+- For constraints and traps (written under `[mem-finding]`), state them as the conclusion and skip the rejected list.
 
-`$ARGUMENTS` に語句が渡された場合は、一覧ではなく該当する主題の全文を日本語で表示する。決定に至った理由と、却下した案それぞれの理由まで展開する。
+Keep every line short enough to read without horizontal scrolling. Last modified comes from the file's mtime, since these are not tracked by git.
+
+Close the whole listing with one line giving the topic count and the approximate character count of `MEMORY.md` — that index is auto-injected every session, so it is the number to watch for bloat.
+
+## Arguments
+
+When `$ARGUMENTS` contains a term, skip the list and show that topic in full instead, in Japanese — expanding the reasoning behind the decision and the reason for each rejected option.

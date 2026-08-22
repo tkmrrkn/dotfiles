@@ -1,41 +1,40 @@
 ---
 name: rules
-description: 今このセッションに効いている規則を、ルールID・出典・最終更新日つきで一覧する。「どんなルールで動いている？」「ルールを見せて」「この判断の根拠は？」と聞かれたときや、規則の棚卸し・矛盾の確認をしたいときに使う。引数にルールIDの一部を渡すと、そのルールの詳細だけを表示する。
+description: List the rules currently in force in this session, with rule ID, source and last-modified date. Use when asked what rules are being followed, to show the rules, or for the reasoning behind a decision, and when auditing the rule set or checking it for contradictions. Given part of a rule ID as an argument, show only that rule in detail.
 allowed-tools: Bash(ls:*), Bash(cat:*), Bash(stat:*), Bash(date:*), Bash(git log:*), Bash(grep:*), Bash(wc:*), Read, Glob, Grep
 ---
 
-このセッションで実際に効いている規則を調べ、一覧にする。読み取りのみ。ファイルは変更しない。
+Inspect the rules actually in force in this session and list them. Read-only — never modify a file.
 
-## 調べる場所
+**Render the entire output in Japanese**, including table headers, even though this file is written in English.
 
-1. `~/.claude/CLAUDE.md` — 全プロジェクト共通のルール。各項目に `[rule-id]` が付いている
-2. カレントディレクトリから上へ辿って見つかる `CLAUDE.md` — プロジェクト固有のルール
-3. `~/.claude/projects/<エンコード名>/memory/` のノートのうち frontmatter が `type: feedback` または `type: user` のもの
-   - エンコード規則: カレントパスの区切りとコロンを `-` に置換する
-     例) `C:\Users\x\dotfiles` → `C--Users-x-dotfiles`
-   - `type: project` は決定・発見であって規則ではないため除外する（`decisions` スキルの担当）
-4. `~/.claude/settings.json` のうち動作に影響する項目（language, model, permissions, hooks など）
-5. `~/.claude/skills/` と `~/.claude/commands/` にあるカスタムスキル・コマンド
+## Where to look
 
-## 最終更新日の取り方
+1. `~/.claude/CLAUDE.md` — rules shared across every project. Each entry carries a `[rule-id]`.
+2. Any `CLAUDE.md` found walking up from the current directory — project-specific rules.
+3. Notes under `~/.claude/projects/<encoded-name>/memory/` whose frontmatter is `type: feedback` or `type: user`.
+   - Encoding: replace path separators and the drive colon with `-`.
+     e.g. `C:\Users\x\dotfiles` becomes `C--Users-x-dotfiles`
+   - Exclude `type: project` — those are decisions and findings, not rules (the `decisions` skill covers them).
+4. Behaviour-affecting entries in `~/.claude/settings.json` (language, model, permissions, hooks, and so on).
+5. Custom skills and commands in `~/.claude/skills/` and `~/.claude/commands/`.
 
-- git 管理下: `git log -1 --format=%ad --date=short -- <file>`
-- 管理外: ファイルの mtime
+## Getting the last-modified date
 
-## 出力
+- Tracked by git: `git log -1 --format=%ad --date=short -- <file>`
+- Untracked: the file's mtime
 
-| ID | 規則（1行要約） | 出典 | 最終更新 |
+## Output
 
-- ID を持たない規則（プロジェクトメモリ等）は ID 欄を `—` にし、出典のファイル名で識別する
-- メモリは英語で保存されている。要約は日本語にして表示する
-- 規則の全文は展開しない。1行に要約し、一覧性を優先する
-- 最終更新から90日以上経っているものには ⚠ を付ける
-- 内容が矛盾する規則、または効いていない可能性のあるもの（存在しないパスを指す、
-  名前と中身が食い違う、システムプロンプトと重複していて書いても挙動が変わらない等）が
-  あれば、表の後に「要確認」として挙げる
-- 最後に、規則の総量（ファイル数・概算文字数・うち毎セッション自動注入される分）を1行で示す
+A table with these columns: rule ID, one-line summary of the rule, source, last modified.
 
-## 引数
+- Rules without an ID (project memory and the like) get `—` in the ID column and are identified by their source filename.
+- Memory notes are stored in English; translate their summaries into Japanese for display.
+- Never expand a rule in full. One summarized line each — a scannable list beats completeness.
+- Mark anything last modified more than 90 days ago with ⚠.
+- After the table, list anything under a "needs review" heading if it contradicts another rule or may not be in force at all: pointing at a path that does not exist, a name that disagrees with its content, or duplicating the system prompt so that writing it changes nothing.
+- Close with one line giving the total volume: file count, approximate character count, and how much of that is auto-injected every session.
 
-`$ARGUMENTS` にルールIDの一部が渡された場合は、一覧ではなく該当ルールの全文・出典・
-最終更新日・関連する他ルールを表示する。
+## Arguments
+
+When `$ARGUMENTS` contains part of a rule ID, skip the list and show that rule in full instead — its complete text, source, last-modified date, and related rules.
