@@ -25,6 +25,9 @@ ensure_symlink() {
 ensure_symlink "$HOME/.config/nvim" "$repo/nvim"
 # ディレクトリごとではなくファイル単位。lazygit が同じ場所に state.yml を書くため。
 ensure_symlink "$HOME/.config/lazygit/config.yml" "$repo/lazygit/config.yml"
+ensure_symlink "$HOME/.claude/CLAUDE.md" "$repo/claude/CLAUDE.md"
+# skills フォルダごとではなく skill 単位。~/.claude/skills には claude.ai 同期分（synced/）も入るため。
+ensure_symlink "$HOME/.claude/skills/rules" "$repo/claude/skills/rules"
 
 # ~/.bashrc に shell/bashrc の読み込みを追記（済みなら何もしない）
 line=". \"$repo/shell/bashrc\""

@@ -14,6 +14,7 @@ dotfiles/
 ├── shell/           # WSL 用 bash 設定
 ├── oh-my-posh/      # プロンプトテーマ
 ├── lazygit/         # lazygit 設定
+├── claude/          # Claude Code のルールとスキル
 ├── keyboard/        # CapsLock を左 Ctrl にする Scancode Map／Windows
 ├── winget/          # winget で入れるツール一式／Windows
 ├── apt/             # 同上／WSL

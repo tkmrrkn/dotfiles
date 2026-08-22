@@ -10,6 +10,9 @@ $links = @(
   @{ Path = "$HOME\.sqlfluff";        Target = "$PSScriptRoot\sqlfluff\.sqlfluff" }
   # ディレクトリごとではなくファイル単位。lazygit が同じ場所に state.yml を書くため。
   @{ Path = "$env:LOCALAPPDATA\lazygit\config.yml"; Target = "$PSScriptRoot\lazygit\config.yml" }
+  @{ Path = "$HOME\.claude\CLAUDE.md"; Target = "$PSScriptRoot\claude\CLAUDE.md" }
+  # skills フォルダごとではなく skill 単位。~/.claude/skills には claude.ai 同期分（synced/）も入るため。
+  @{ Path = "$HOME\.claude\skills\rules"; Target = "$PSScriptRoot\claude\skills\rules" }
 )
 
 # 作成すべきリンクが残っている場合のみ、symlink 作成権限（開発者モード or 管理者）を要求。
