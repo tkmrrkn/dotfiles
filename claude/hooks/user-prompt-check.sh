@@ -10,7 +10,7 @@
 # UserPromptSubmit は標準出力がそのままコンテキストに入るので JSON にしない。
 cat >/dev/null
 
-note='Check the PREVIOUS turn against [mem-decision] and [mem-finding]. If either applies, write the memory now and report the filename with a one-line summary.'
+note='Check the PREVIOUS turn against [mem-propose-decision] and [mem-propose-finding]. If either applies, propose the memory entry and ask for approval before writing.'
 
 # tasks.md が無い作業では作業確認の文言を出さない。ファイルの有無を見るだけなので安い。
 if [ -f "${CLAUDE_PROJECT_DIR:-$PWD}/.claude/tasks.md" ]; then

@@ -8,8 +8,9 @@
 - `[git-split-coarse]` Split commits at the coarsest unit that still means something.
 
 ## Memory
-- `[mem-decision]` Write a decision to memory whenever some option was rejected.
-- `[mem-finding]` Write discovered constraints and traps to memory when they cannot be read from the code.
+- `[mem-propose-decision]` Propose a memory entry whenever some option was rejected.
+- `[mem-propose-finding]` Propose a memory entry for a discovered constraint or trap that cannot be read from the code.
+- `[mem-approval]` Never create, overwrite or delete a memory file until the user has approved it; show the proposed text when asking.
 - `[mem-topic]` One file per topic and one home per fact. Overwrite on change; link with `[[slug]]` rather than restating what another file owns.
 - `[mem-index]` MEMORY.md index lines take the form "slug — current conclusion".
 - `[mem-scope]` Global guidance becomes a CLAUDE.md rule; everything else goes to the memory of the project owning the artifact — Claude's own config belongs to dotfiles.
