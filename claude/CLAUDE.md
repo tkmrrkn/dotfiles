@@ -1,6 +1,6 @@
 # How to work
 
-`[...]` is a rule ID, used to name a rule in conversation. Change a rule's content and change its ID with it.
+`[...]` is a rule ID naming what the rule governs, not what it currently says. Never rename one; references break silently. If the subject itself changes, retire the ID and add a new rule.
 
 ## Git
 - `[git-conventional]` In commit messages only the Conventional Commits prefix is English; the rest is Japanese.
@@ -8,8 +8,8 @@
 - `[git-split-coarse]` Split commits at the coarsest unit that still means something.
 
 ## Memory
-- `[mem-propose-decision]` Propose a memory entry whenever some option was rejected.
-- `[mem-propose-finding]` Propose a memory entry for a discovered constraint or trap that cannot be read from the code.
+- `[mem-decision]` Propose a memory entry for a rejected option only when re-proposing it would cost real work; skip whatever code, comments or commit messages already explain.
+- `[mem-finding]` Propose a memory entry for a discovered constraint or trap only when rediscovering it would cost real work; skip whatever is readable from the code.
 - `[mem-approval]` Never create, overwrite or delete a memory file until the user has approved it; show the proposed text when asking.
 - `[mem-topic]` One file per topic and one home per fact. Overwrite on change; link with `[[slug]]` rather than restating what another file owns.
 - `[mem-index]` MEMORY.md index lines take the form "slug — current conclusion".
