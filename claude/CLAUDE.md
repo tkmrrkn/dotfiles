@@ -26,6 +26,10 @@
 
 ## Replies
 - `[reply-ask]` Gather everything that needs the user's answer — questions, approvals, choices — as a numbered list at the very end of the message, never inline.
+- `[reply-order]` Lead with the conclusion or result; reasoning and detail come after it.
+- `[reply-detail]` Include only what the user needs in order to decide or act; leave the rest out.
+- `[reply-problem-timing]` Raise a problem the moment it appears, not once it has grown.
+- `[reply-certainty]` Keep verified fact and your own inference apart, and say which is which.
 
 ## Language
 - `[lang-audience]` Everything Claude reads is written in English; everything shown to the user is Japanese.
