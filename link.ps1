@@ -14,11 +14,13 @@ $links = @(
   # skills フォルダごとではなく skill 単位。~/.claude/skills には claude.ai 同期分（synced/）も入るため。
   @{ Path = "$HOME\.claude\skills\rules"; Target = "$PSScriptRoot\claude\skills\rules" }
   @{ Path = "$HOME\.claude\skills\decisions"; Target = "$PSScriptRoot\claude\skills\decisions" }
-  @{ Path = "$HOME\.claude\settings.json"; Target = "$PSScriptRoot\claude\settings.json" }
   @{ Path = "$HOME\.claude\statusline-command.sh"; Target = "$PSScriptRoot\claude\statusline-command.sh" }
-  # hooks は Claude Code 以外が書かないディレクトリなのでフォルダごと。
-  @{ Path = "$HOME\.claude\hooks"; Target = "$PSScriptRoot\claude\hooks" }
 )
+
+# hooks はフォルダごとではなくファイル単位。マシン固有の hook を同じ場所に置けるようにする。
+$links += Get-ChildItem "$PSScriptRoot\claude\hooks" -File | ForEach-Object {
+  @{ Path = "$HOME\.claude\hooks\$($_.Name)"; Target = $_.FullName }
+}
 
 # 作成すべきリンクが残っている場合のみ、symlink 作成権限（開発者モード or 管理者）を要求。
 # 全リンク作成済みなら権限なしで通る。

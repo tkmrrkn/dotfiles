@@ -29,10 +29,12 @@ ensure_symlink "$HOME/.claude/CLAUDE.md" "$repo/claude/CLAUDE.md"
 # skills フォルダごとではなく skill 単位。~/.claude/skills には claude.ai 同期分（synced/）も入るため。
 ensure_symlink "$HOME/.claude/skills/rules" "$repo/claude/skills/rules"
 ensure_symlink "$HOME/.claude/skills/decisions" "$repo/claude/skills/decisions"
-ensure_symlink "$HOME/.claude/settings.json" "$repo/claude/settings.json"
 ensure_symlink "$HOME/.claude/statusline-command.sh" "$repo/claude/statusline-command.sh"
-# hooks は Claude Code 以外が書かないディレクトリなのでフォルダごと。
-ensure_symlink "$HOME/.claude/hooks" "$repo/claude/hooks"
+# hooks はフォルダごとではなくファイル単位。マシン固有の hook を同じ場所に置けるようにする。
+for f in "$repo"/claude/hooks/*; do
+  [ -f "$f" ] || continue
+  ensure_symlink "$HOME/.claude/hooks/$(basename "$f")" "$f"
+done
 
 # ~/.bashrc に shell/bashrc の読み込みを追記（済みなら何もしない）
 line=". \"$repo/shell/bashrc\""
