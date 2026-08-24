@@ -1,6 +1,6 @@
 # How to work
 
-`[...]` is a rule ID naming what the rule governs, not what it currently says. Never rename one; references break silently. If the subject itself changes, retire the ID and add a new rule.
+`[...]` is a rule ID, used to refer to a rule from anywhere.
 
 ## Git
 - `[git-message-language]` In commit messages only the Conventional Commits prefix is English; the rest is Japanese.
@@ -35,4 +35,5 @@
 - `[lang-audience]` Everything Claude reads is written in English; everything shown to the user is Japanese.
 
 ## Meta
+- `[meta-rule-id]` A rule ID names the subject the rule governs, never its current content; renaming one breaks references silently, so retire the ID instead when the subject changes.
 - `[meta-rule-style]` Write each rule as one concise line, never one that reads two ways.
