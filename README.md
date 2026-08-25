@@ -15,7 +15,7 @@ dotfiles/
 ├── oh-my-posh/      # プロンプトテーマ
 ├── lazygit/         # lazygit 設定
 ├── claude/          # Claude Code の設定・ルール・スキル・hook
-├── keyboard/        # CapsLock を左 Ctrl にする Scancode Map／Windows
+├── keyboard/        # キーの差し替え（Scancode Map）／Windows
 ├── winget/          # winget で入れるツール一式／Windows
 ├── apt/             # 同上／WSL
 ├── pnpm/            # pnpm グローバルパッケージ導入
@@ -78,12 +78,17 @@ PATH を反映するため、pwsh を開き直す。
 
 ### 5. キーリマップを適用
 
-CapsLock を左 Ctrl にする Scancode Map をレジストリに書き込む。管理者権限の pwsh で実行し、
-再起動して反映する。
+CapsLock → 左 Ctrl、カタカナ/ひらがな → Esc の Scancode Map をレジストリに書き込む。
+管理者権限の pwsh で実行し、再起動して反映する。差し替えを増やすときは `install.ps1` の
+`$mappings` に足す。
 
 ```powershell
-./keyboard/install.ps1
+./keyboard/install.ps1            # 適用
+./keyboard/install.ps1 -Remove    # 解除
 ```
+
+システム全体かつ全ユーザーに適用され、ドライバ段階の変換なのでログオン画面でも効く。
+半角/全角・無変換・変換は触っていないので IME の操作は従来どおり。
 
 ## 導入手順（WSL）
 
