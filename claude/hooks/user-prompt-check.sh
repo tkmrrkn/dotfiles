@@ -1,13 +1,6 @@
 #!/usr/bin/env bash
-# UserPromptSubmit hook: ユーザー入力のたびに、記憶すべきことがないか確認させる。
-#
-# Stop ではなく UserPromptSubmit を使う理由（2026-08-23 実測）:
-#   Stop は Claude 自身の応答で発火するため、additionalContext を返すと無限ループになる。
-#   UserPromptSubmit はユーザーが入力したときだけ発火するのでループしない。
-#   代償として、判定対象は「直前のターン」になり 1 ラリー遅れる。
-#
-# 判断基準そのものは ~/.claude/CLAUDE.md 側にあるため、ここでは参照するだけにする。
-# UserPromptSubmit は標準出力がそのままコンテキストに入るので JSON にしない。
+# UserPromptSubmit hook: 入力のたびに記憶すべきことがないか確認させる。標準出力がそのまま文脈に入る。
+# Stop だと自分の応答で発火して無限ループになるため、判定対象は直前のターンで1ラリー遅れる。
 cat >/dev/null
 
 note='Check the PREVIOUS turn against [mem-decision] and [mem-finding]. If either applies, propose the memory entry and ask for approval before writing.'
