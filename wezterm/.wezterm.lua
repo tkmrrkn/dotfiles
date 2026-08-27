@@ -283,7 +283,14 @@ end)
 
 -- === 起動時の定位置: dotfilesシェル + メモ ==========================
 -- defaultワークスペースに置く。リポジトリを開く前の起点をここが兼ねる。
-wezterm.on("gui-startup", function()
+wezterm.on("gui-startup", function(cmd)
+	-- gui-startupを定義するとコマンドライン指定は無視されるため、cmdがあれば明示的に開く。
+	-- エクスプローラの右クリックからnvimを開くのがこの経路。
+	if cmd then
+		wezterm.mux.spawn_window(cmd)
+		return
+	end
+
 	local dotfiles_tab, _, win = wezterm.mux.spawn_window({
 		cwd = wezterm.home_dir .. "\\dotfiles",
 		args = { "pwsh.exe", "-NoLogo" },

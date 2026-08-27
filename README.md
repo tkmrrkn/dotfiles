@@ -90,6 +90,20 @@ CapsLock → 左 Ctrl、カタカナ/ひらがな → Esc の Scancode Map を�
 システム全体かつ全ユーザーに適用され、ドライバ段階の変換なのでログオン画面でも効く。
 半角/全角・無変換・変換は触っていないので IME の操作は従来どおり。
 
+### 6. 右クリックメニューに「WezTerm の nvim で開く」を登録
+
+エクスプローラでファイルを右クリックし、WezTerm の nvim で開けるようにする。HKCU なので
+管理者権限は不要。Windows 11 ではクラシックメニュー（「その他のオプションを表示」/ Shift+F10）
+の中に出る。
+
+```powershell
+./wezterm/install-context-menu.ps1   # 冪等・再実行可
+```
+
+WezTerm が起動していれば表示中のウィンドウに新しいタブとして開き、起動していなければ新しい
+ウィンドウを開く。どちらもファイルの親フォルダを cwd にするので、nvim 側の grep や find が
+そのまま使える。経路は `wscript → open-in-nvim.vbs → open-in-nvim.ps1`。
+
 ## 導入手順（WSL）
 
 nvim 設定は Windows と共通。WezTerm からは Ctrl+Space → d で WSL タブを開ける。

@@ -2,3 +2,7 @@
 *.sh text eol=lf
 shell/bashrc text eol=lf
 git/hooks/* text eol=lf
+
+# VBScript は BOM が無いと ANSI として読み、日本語コメントが壊れて次の行まで飲み込む。
+# リポジトリは UTF-8 で持ち、作業ツリーだけ UTF-16LE + BOM に変換する。
+*.vbs text working-tree-encoding=UTF-16LE-BOM eol=crlf
