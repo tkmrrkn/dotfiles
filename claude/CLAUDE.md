@@ -2,39 +2,17 @@
 
 `[...]` is a rule ID, used to refer to a rule from anywhere.
 
-## Code
-- `[code-comment-length]` Keep code comments to one or two lines; put the investigation trail in the conversation or the commit message.
+## Replies
+
+* `[reply-clarity]` Answer the actual question first, then explain the reason and a concrete example; keep the explanation focused and reset it when it becomes tangled.
+* `[reply-evidence]` Distinguish verified facts, assumptions, and recommendations; never fill gaps with guesses when the answer depends on missing evidence.
+* `[reply-correction]` When new evidence invalidates an earlier statement, explicitly correct the earlier statement instead of silently changing it.
+* `[reply-questions]` Before asking, resolve what can be resolved independently; present the relevant context, trade-offs, and a recommended option, then ask only for the decision that requires the user's judgment.
 
 ## Git
-- `[git-message-language]` In commit messages only the Conventional Commits prefix is English; the rest is Japanese.
-- `[git-message-content]` State what changed and why in the commit message.
-- `[git-commit-granularity]` Split commits at the coarsest unit that still means something.
 
-## Work in progress
-- `[task-plan]` Before starting work that changes things, break it into checkboxes in `.claude/tasks.md` and get approval. Skip it for simple work.
-- `[task-git]` Never commit `.claude/tasks.md`.
-- `[task-completion]` Delete `.claude/tasks.md` once all the work is finished.
-
-## Instructions
-- `[inst-scope]` Never exclude anything from an instruction's scope on your own judgement; apply it broadly and say what you covered, or ask.
-- `[inst-ambiguity]` When an instruction can be read more than one way, stop before acting and settle the reading with the user; never proceed on a guess.
-- `[inst-approval]` Approval covers only what the answer names; silence, a partial answer and an intent to report afterwards are not approval.
-
-## Replies
-- `[reply-ask-placement]` Gather everything that needs the user's answer — questions, approvals, choices — as a numbered list at the very end of the message, never inline.
-- `[reply-ask-count]` Ask the fewest questions that settle the decision.
-- `[reply-ask-granularity]` Never bundle independent decisions into a single numbered item.
-- `[reply-ask-polarity]` Ask about the action you intend to take, never about not taking it, so that no has one meaning.
-- `[reply-ask-options]` Where a sensible default exists, propose it for confirmation instead of asking an open question.
-- `[reply-explain]` When explaining, state the conclusion first, then the reason, then a concrete example; where a premise is unclear, confirm it instead of filling it in.
-- `[reply-detail]` Include only what the user needs in order to decide or act; leave the rest out.
-- `[reply-problem-timing]` Raise a problem the moment it appears, not once it has grown.
-- `[reply-certainty]` Keep verified fact and your own inference apart, and say which is which.
+* `[git-commit]` Use Conventional Commits with only the prefix in English and the rest in Japanese; state what changed and why, and keep each commit focused on one meaningful change.
 
 ## Language
-- `[lang-audience]` Claude's own config and notes (CLAUDE.md, skills, memory, feedback rules) are English; everything a person reads - replies, code comments, READMEs - is Japanese.
 
-## Meta
-- `[meta-rule-id]` A rule ID names the subject the rule governs, never its current content.
-- `[meta-rule-rename]` Renaming a rule ID is a last resort; when renaming, find every reference and update them all in the same change.
-- `[meta-rule-style]` Write each rule as one concise line, never one that reads two ways.
+* `[lang-audience]` Keep Claude's configuration and internal notes in English; keep all user-facing content, code comments, and READMEs in Japanese.
