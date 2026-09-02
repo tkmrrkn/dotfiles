@@ -23,9 +23,10 @@
 ## Replies
 - `[reply-ask-placement]` Gather everything that needs the user's answer — questions, approvals, choices — as a numbered list at the very end of the message, never inline.
 - `[reply-ask-count]` Ask the fewest questions that settle the decision.
-- `[reply-ask-granularity]` One numbered item per decision; never bundle independent decisions into a single item.
+- `[reply-ask-granularity]` Never bundle independent decisions into a single numbered item.
+- `[reply-ask-polarity]` Ask about the action you intend to take, never about not taking it, so that no has one meaning.
 - `[reply-ask-options]` Where a sensible default exists, propose it for confirmation instead of asking an open question.
-- `[reply-order]` Lead with the conclusion or result; reasoning and detail come after it.
+- `[reply-explain]` When explaining, state the conclusion first, then the reason, then a concrete example; where a premise is unclear, confirm it instead of filling it in.
 - `[reply-detail]` Include only what the user needs in order to decide or act; leave the rest out.
 - `[reply-problem-timing]` Raise a problem the moment it appears, not once it has grown.
 - `[reply-certainty]` Keep verified fact and your own inference apart, and say which is which.
