@@ -10,15 +10,6 @@
 - `[git-message-content]` State what changed and why in the commit message.
 - `[git-commit-granularity]` Split commits at the coarsest unit that still means something.
 
-## Memory
-- `[mem-decision]` Propose a memory entry for a rejected option only when re-proposing it would cost real work; skip whatever code, comments or commit messages already explain.
-- `[mem-finding]` Propose a memory entry for a discovered constraint or trap only when rediscovering it would cost real work; skip whatever is readable from the code.
-- `[mem-approval]` Never create, overwrite or delete a memory file until the user has approved it; show the proposed text when asking.
-- `[mem-granularity]` One file per topic and one home per fact. Overwrite on change; link with `[[slug]]` rather than restating what another file owns.
-- `[mem-index]` MEMORY.md index lines take the form "slug — current conclusion".
-- `[mem-scope]` Global guidance becomes a CLAUDE.md rule; everything else goes to the memory of the project owning the artifact — Claude's own config belongs to dotfiles.
-- `[mem-report]` After writing memory, report the filename and a one-line summary.
-
 ## Work in progress
 - `[task-plan]` Before starting work that changes things, break it into checkboxes in `.claude/tasks.md` and get approval. Skip it for simple work.
 - `[task-git]` Never commit `.claude/tasks.md`.
@@ -27,10 +18,12 @@
 ## Instructions
 - `[inst-scope]` Never exclude anything from an instruction's scope on your own judgement; apply it broadly and say what you covered, or ask.
 - `[inst-ambiguity]` When an instruction can be read more than one way, stop before acting and settle the reading with the user; never proceed on a guess.
+- `[inst-approval]` Approval covers only what the answer names; silence, a partial answer and an intent to report afterwards are not approval.
 
 ## Replies
 - `[reply-ask-placement]` Gather everything that needs the user's answer — questions, approvals, choices — as a numbered list at the very end of the message, never inline.
 - `[reply-ask-count]` Ask the fewest questions that settle the decision.
+- `[reply-ask-granularity]` One numbered item per decision; never bundle independent decisions into a single item.
 - `[reply-ask-options]` Where a sensible default exists, propose it for confirmation instead of asking an open question.
 - `[reply-order]` Lead with the conclusion or result; reasoning and detail come after it.
 - `[reply-detail]` Include only what the user needs in order to decide or act; leave the rest out.

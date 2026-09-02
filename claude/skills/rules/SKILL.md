@@ -15,7 +15,7 @@ Inspect the rules actually in force in this session and list them. Read-only —
 3. Notes under `~/.claude/projects/<encoded-name>/memory/` whose frontmatter is `type: feedback` or `type: user`.
    - Encoding: replace path separators and the drive colon with `-`.
      e.g. `C:\Users\x\dotfiles` becomes `C--Users-x-dotfiles`
-   - Exclude `type: project` — those are decisions and findings, not rules (the `decisions` skill covers them).
+   - Exclude `type: project` — it is not guidance to follow.
 4. Behaviour-affecting entries in `~/.claude/settings.json` (language, model, permissions, hooks, and so on).
 5. Custom skills and commands in `~/.claude/skills/` and `~/.claude/commands/`.
 

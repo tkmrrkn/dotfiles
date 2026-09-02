@@ -33,9 +33,6 @@ Python が `__pycache__` を同じ場所に作るので、フォルダごとリ�
   "hooks": {
     "SessionStart": [
       { "hooks": [{ "type": "command", "command": "bash ~/.claude/hooks/session-start-tasks.sh" }] }
-    ],
-    "UserPromptSubmit": [
-      { "hooks": [{ "type": "command", "command": "bash ~/.claude/hooks/user-prompt-check.sh" }] }
     ]
   }
 }

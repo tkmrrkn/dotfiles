@@ -13,7 +13,6 @@ $links = @(
   @{ Path = "$HOME\.claude\CLAUDE.md"; Target = "$PSScriptRoot\claude\CLAUDE.md" }
   # skills フォルダごとではなく skill 単位。~/.claude/skills には claude.ai 同期分（synced/）も入るため。
   @{ Path = "$HOME\.claude\skills\rules"; Target = "$PSScriptRoot\claude\skills\rules" }
-  @{ Path = "$HOME\.claude\skills\decisions"; Target = "$PSScriptRoot\claude\skills\decisions" }
   @{ Path = "$HOME\.claude\statusline-command.sh"; Target = "$PSScriptRoot\claude\statusline-command.sh" }
 )
 

@@ -28,7 +28,6 @@ ensure_symlink "$HOME/.config/lazygit/config.yml" "$repo/lazygit/config.yml"
 ensure_symlink "$HOME/.claude/CLAUDE.md" "$repo/claude/CLAUDE.md"
 # skills フォルダごとではなく skill 単位。~/.claude/skills には claude.ai 同期分（synced/）も入るため。
 ensure_symlink "$HOME/.claude/skills/rules" "$repo/claude/skills/rules"
-ensure_symlink "$HOME/.claude/skills/decisions" "$repo/claude/skills/decisions"
 ensure_symlink "$HOME/.claude/statusline-command.sh" "$repo/claude/statusline-command.sh"
 # hooks はフォルダごとではなくファイル単位。マシン固有の hook を同じ場所に置けるようにする。
 for f in "$repo"/claude/hooks/*; do
