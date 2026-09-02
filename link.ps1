@@ -14,6 +14,7 @@ $links = @(
   # skills フォルダごとではなく skill 単位。~/.claude/skills には claude.ai 同期分（synced/）も入るため。
   @{ Path = "$HOME\.claude\skills\rules"; Target = "$PSScriptRoot\claude\skills\rules" }
   @{ Path = "$HOME\.claude\skills\clarify"; Target = "$PSScriptRoot\claude\skills\clarify" }
+  @{ Path = "$HOME\.claude\skills\session"; Target = "$PSScriptRoot\claude\skills\session" }
   @{ Path = "$HOME\.claude\statusline-command.sh"; Target = "$PSScriptRoot\claude\statusline-command.sh" }
 )
 
