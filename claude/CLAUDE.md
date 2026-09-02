@@ -1,7 +1,5 @@
 # How to work
 
-`[...]` is a rule ID, used to refer to a rule from anywhere.
-
 ## Replies
 
 * `[reply-clarity]` Answer the actual question first, then explain the reason and a concrete example; keep the explanation focused and reset it when it becomes tangled.

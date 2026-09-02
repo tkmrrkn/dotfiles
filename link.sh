@@ -30,11 +30,6 @@ ensure_symlink "$HOME/.claude/CLAUDE.md" "$repo/claude/CLAUDE.md"
 ensure_symlink "$HOME/.claude/skills/rules" "$repo/claude/skills/rules"
 ensure_symlink "$HOME/.claude/skills/clarify" "$repo/claude/skills/clarify"
 ensure_symlink "$HOME/.claude/statusline-command.sh" "$repo/claude/statusline-command.sh"
-# hooks はフォルダごとではなくファイル単位。マシン固有の hook を同じ場所に置けるようにする。
-for f in "$repo"/claude/hooks/*; do
-  [ -f "$f" ] || continue
-  ensure_symlink "$HOME/.claude/hooks/$(basename "$f")" "$f"
-done
 
 # ~/.bashrc に shell/bashrc の読み込みを追記（済みなら何もしない）
 line=". \"$repo/shell/bashrc\""

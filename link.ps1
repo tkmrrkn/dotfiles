@@ -17,11 +17,6 @@ $links = @(
   @{ Path = "$HOME\.claude\statusline-command.sh"; Target = "$PSScriptRoot\claude\statusline-command.sh" }
 )
 
-# hooks はフォルダごとではなくファイル単位。マシン固有の hook を同じ場所に置けるようにする。
-$links += Get-ChildItem "$PSScriptRoot\claude\hooks" -File | ForEach-Object {
-  @{ Path = "$HOME\.claude\hooks\$($_.Name)"; Target = $_.FullName }
-}
-
 # 作成すべきリンクが残っている場合のみ、symlink 作成権限（開発者モード or 管理者）を要求。
 # 全リンク作成済みなら権限なしで通る。
 $needsLink = $links | Where-Object { -not (Get-Item $_.Path -Force -ErrorAction SilentlyContinue) }
