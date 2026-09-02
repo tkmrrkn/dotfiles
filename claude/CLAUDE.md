@@ -26,6 +26,7 @@
 
 ## Instructions
 - `[inst-scope]` Never exclude anything from an instruction's scope on your own judgement; apply it broadly and say what you covered, or ask.
+- `[inst-ambiguity]` When an instruction can be read more than one way, stop before acting and settle the reading with the user; never proceed on a guess.
 
 ## Replies
 - `[reply-ask-placement]` Gather everything that needs the user's answer — questions, approvals, choices — as a numbered list at the very end of the message, never inline.
