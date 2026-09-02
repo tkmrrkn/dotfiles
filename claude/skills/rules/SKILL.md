@@ -17,7 +17,7 @@ Inspect the rules actually in force in this session and list them. Read-only —
      e.g. `C:\Users\x\dotfiles` becomes `C--Users-x-dotfiles`
    - Exclude `type: project` — it is not guidance to follow.
 4. Behaviour-affecting entries in `~/.claude/settings.json` (language, model, permissions, hooks, and so on).
-5. Custom skills and commands in `~/.claude/skills/` and `~/.claude/commands/`.
+5. Custom skills in `~/.claude/skills/`.
 
 ## Getting the last-modified date
 
