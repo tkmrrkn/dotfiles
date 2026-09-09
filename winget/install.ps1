@@ -6,7 +6,7 @@ winget install --id DEVCOM.JetBrainsMonoNerdFont -e
 winget install --id Git.Git -e
 winget install --id GitHub.cli -e
 winget install --id x-motemen.ghq -e
-winget install --id OpenJS.NodeJS.LTS -e
+winget install --id Schniz.fnm -e
 winget install --id pnpm.pnpm -e
 winget install --id ajeetdsouza.zoxide -e
 winget install --id junegunn.fzf -e

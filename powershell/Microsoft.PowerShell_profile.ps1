@@ -8,6 +8,11 @@ oh-my-posh init pwsh --config "$dotfilesRoot\oh-my-posh\prompt.omp.json" | Invok
 # `z <部分名>` でよく行くディレクトリへ即移動（frecencyで学習するcd代替）
 Invoke-Expression (& { (zoxide init powershell | Out-String) })
 
+# === fnm =============================================================
+# Nodeのバージョン管理。--use-on-cdで.nvmrc等を見てディレクトリ移動時に切り替える。
+# zoxideの`z`はcdエイリアスを通らないので切り替わらない（defaultの版が使われる）。
+fnm env --use-on-cd --shell powershell | Out-String | Invoke-Expression
+
 # === fzf =============================================================
 # 共通オプション（高さ/レイアウト/枠/プロンプト）。fzfはwinget導入でPATH済み。
 $env:FZF_DEFAULT_OPTS = '--height 40% --layout reverse --border rounded --info inline --prompt "> "'
