@@ -14,7 +14,6 @@ winget install --id Microsoft.VisualStudio.2022.BuildTools -e --override "--quie
 winget install --id Microsoft.PowerToys -e
 winget install --id JanDeDobbeleer.OhMyPosh -e
 winget install --id JohnMacFarlane.Pandoc -e
-winget install --id Gyan.FFmpeg -e
 winget install --id Zen-Team.Zen-Browser -e
 winget install --id sakura-editor.sakura -e
 winget install --id qutebrowser.qutebrowser -e
