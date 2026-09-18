@@ -1,5 +1,5 @@
 ---
-name: session
+name: handoff
 description: Carry one piece of work across session boundaries. Use before closing a session on a large task so the next one can continue — "セッションを分けたい", "引き継ぎを残して", "一旦切る", "コンテキストが重い" — and at the start of a session to pick that work back up — "続きをやる", "前回の続き". Writes and reads one short handoff note per repository.
 ---
 
@@ -46,7 +46,7 @@ note: fix the note as part of this session.
 
 1. Pick the target file — the in-progress note for this work, or a new one.
 2. Overwrite it whole. The note describes the present state, not a diary of what happened.
-3. Tell the user to `/clear` and run `/session` in a fresh session.
+3. Tell the user to `/clear` and run `/handoff` in a fresh session.
 
 When the work is done, set `Status: done` and empty 次の一手. Never delete the file.
 
