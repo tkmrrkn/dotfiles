@@ -1,5 +1,9 @@
 # How to work
 
+## Problem solving
+
+* `[problem-evidence]` Before reasoning about a problem, identify the information and evidence required to solve it; obtain or verify missing information before proceeding.
+
 ## Replies
 
 * `[reply-clarity]` Answer the actual question first, then explain the reason and a concrete example; keep the explanation focused.
