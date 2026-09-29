@@ -383,12 +383,21 @@ local CLAUDE_STATUS_DISPLAY = {
 	idle = "■",
 }
 
+-- 放置されたbackgroundのblockedが⏸として居座り続けるので、起動からこれ以上経ったものは数えない。
+-- claude agentsはblockedになった時刻を返さないため起動時刻(startedAt、ミリ秒)で判定する。
+-- そのため長時間動いた後にblockedになったものも消える点は割り切る。
+local CLAUDE_STALE_BLOCKED_SECONDS = 24 * 60 * 60
+
+local function is_stale(entry)
+	return entry.startedAt ~= nil and (os.time() - entry.startedAt / 1000) > CLAUDE_STALE_BLOCKED_SECONDS
+end
+
 -- interactiveはstatus、backgroundはstateを見る(done/failed/stoppedは終了扱いでnilを返す)
 local function claude_bucket(entry)
 	if entry.kind == "background" then
 		if entry.state == "working" then
 			return "busy"
-		elseif entry.state == "blocked" then
+		elseif entry.state == "blocked" and not is_stale(entry) then
 			return "waiting"
 		end
 		return nil
