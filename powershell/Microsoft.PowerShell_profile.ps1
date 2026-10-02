@@ -41,6 +41,17 @@ Set-PSReadLineKeyHandler -Key 'Ctrl+t' -BriefDescription 'FzfFiles' -ScriptBlock
   }
 }
 
+# === ssh 系コマンドを Git 同梱の OpenSSH に向ける ======================
+# PATH では Windows 標準の OpenSSH（System32）が先に見つかるが、版が古く新しい
+# サーバの鍵交換方式（sntrup761x25519 等）に対応しない。git も Git 同梱版を使うので揃える。
+# alias は PATH より優先されるので、PATH 自体は触らない。
+$gitSshDir = 'C:\Program Files\Git\usr\bin'
+if (Test-Path $gitSshDir) {
+  foreach ($cmd in 'ssh', 'scp', 'sftp', 'ssh-add', 'ssh-agent', 'ssh-keygen', 'ssh-keyscan') {
+    Set-Alias -Name $cmd -Value "$gitSshDir\$cmd.exe"
+  }
+}
+
 # === DeepL翻訳 ========================================================
 # `trans <text>` で日本語訳、`trans -To EN <text>` で英訳などターミナル内で完結。
 # APIキーは事前に `gopass insert deepl/api-key` で登録しておく（DeepL API Free/Pro のキー）。
