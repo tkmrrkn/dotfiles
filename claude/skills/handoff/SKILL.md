@@ -19,8 +19,10 @@ file is written in English.
 `~/.claude/projects/<slug>/plans/<work-name>.md`
 
 - `<slug>` — the absolute path of the repository root (the working directory when there is no
-  repository) with the drive colon and every path separator replaced by `-`.
-  e.g. `C:\Users\x\dotfiles` becomes `C--Users-x-dotfiles`.
+  repository) with every character that is not an ASCII letter or digit — the drive colon, path
+  separators, dots and the like — replaced by `-`. This matches the folder names Claude Code creates.
+  e.g. `C:\Users\x\dotfiles` becomes `C--Users-x-dotfiles`, and
+  `C:\Users\x\ghq\github.com\me\app` becomes `C--Users-x-ghq-github-com-me-app`.
 - `<work-name>` — kebab-case, naming the work rather than the session. Keep it unchanged across
   sessions so the same file is updated.
 - Create `plans/` if it does not exist. Never write into the sibling `memory/`.

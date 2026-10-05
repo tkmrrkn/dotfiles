@@ -13,8 +13,8 @@ Inspect the rules actually in force in this session and list them. Read-only —
 1. `~/.claude/CLAUDE.md` — rules shared across every project. Each entry carries a `[rule-id]`.
 2. Any `CLAUDE.md` found walking up from the current directory — project-specific rules.
 3. Notes under `~/.claude/projects/<encoded-name>/memory/` whose frontmatter is `type: feedback` or `type: user`.
-   - Encoding: replace path separators and the drive colon with `-`.
-     e.g. `C:\Users\x\dotfiles` becomes `C--Users-x-dotfiles`
+   - Encoding: replace every character that is not an ASCII letter or digit (the drive colon, path separators, dots and the like) with `-`.
+     e.g. `C:\Users\x\dotfiles` becomes `C--Users-x-dotfiles`, and `C:\Users\x\ghq\github.com\me\app` becomes `C--Users-x-ghq-github-com-me-app`
    - Exclude `type: project` — it is not guidance to follow.
 4. Behaviour-affecting entries in `~/.claude/settings.json` (language, model, permissions, hooks, and so on).
 5. Custom skills in `~/.claude/skills/`.
