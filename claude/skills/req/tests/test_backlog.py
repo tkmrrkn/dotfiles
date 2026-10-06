@@ -90,9 +90,19 @@ def test_change_only_comment(fetch):
 
 
 def test_follows_pages_beyond_100_comments(fetch):
+    # minId が「以上」か「より大きい」かは資料に書かれていない。どちらでも抜けず重ならないよう、
+    # 前のページの最後の ID から取り直し、取得済みの ID を捨てる
     out, api = fetch({comments_url(): [comment(n) for n in range(1, 101)],
-                      comments_url(min_id=101): [comment(101)]})
+                      comments_url(min_id=100): [comment(100), comment(101)]})
     assert "## コメント（古い順、101 件）" in out
+    assert out.count("（comment_id 100）") == 1
+    assert len(api.requests) == 3
+
+
+def test_stops_when_a_full_page_brings_nothing_new(fetch):
+    page = [comment(n) for n in range(1, 101)]
+    out, api = fetch({comments_url(): page, comments_url(min_id=100): [comment(100)] * 100})
+    assert "## コメント（古い順、100 件）" in out
     assert len(api.requests) == 3
 
 

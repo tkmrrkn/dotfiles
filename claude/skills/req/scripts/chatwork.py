@@ -68,6 +68,8 @@ def fetch(link: str, token: str) -> str:
     for m in before:
         lines += _message(m, me)
     lines.append(f"## 後の流れ（{len(after)} 件）")
+    if message not in ids:
+        lines.append("依頼からここまでのあいだのメッセージは取れていません（直近 100 件しか取れないため）")
     for m in after:
         lines += _message(m, me)
     return "\n".join(lines).rstrip() + "\n"

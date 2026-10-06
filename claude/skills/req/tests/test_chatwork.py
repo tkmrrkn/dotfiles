@@ -83,6 +83,7 @@ def test_request_older_than_recent_messages(fake_api):
     out = chatwork.fetch(LINK, TOKEN)
     assert "前の流れは取れていません（依頼が直近 100 件より古いため）" in out
     assert "## 後の流れ（5 件）" in out
+    assert "依頼からここまでのあいだのメッセージは取れていません" in out
 
 
 def test_no_messages_returns_empty_body(fake_api):

@@ -46,16 +46,21 @@ def _url(host: str, path: str, key: str, params: dict | None = None) -> str:
 
 def _comments(host: str, issue_key: str, key: str) -> list[dict]:
     out: list[dict] = []
+    seen: set[int] = set()
     min_id = None
     while True:
         params = {"count": COMMENTS_PER_PAGE, "order": "asc"}
         if min_id is not None:
             params["minId"] = min_id
         page = call("GET", _url(host, f"/issues/{issue_key}/comments", key, params)) or []
-        out += page
-        if len(page) < COMMENTS_PER_PAGE:
+        new = [c for c in page if c["id"] not in seen]
+        seen.update(c["id"] for c in new)
+        out += new
+        if len(page) < COMMENTS_PER_PAGE or not new:
             return out
-        min_id = page[-1]["id"] + 1
+        # minId が「以上」か「より大きい」かは資料に書かれていない。どちらでも抜けないよう、
+        # 最後の ID から取り直して重なった分を捨てる
+        min_id = page[-1]["id"]
 
 
 def _name(user: dict | None, empty: str = "不明") -> str:

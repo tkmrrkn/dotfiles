@@ -3,7 +3,7 @@ name: req
 description: Takes a work request — a Chatwork message link, a Backlog issue link, or pasted text — reads it with its context and related issues, moves it forward as far as possible without approval, and reports only the decisions left for the user. Posts and comments only after numbered approval.
 argument-hint: "<Chatwork/Backlog のリンク または 依頼の文字列>"
 disable-model-invocation: true
-allowed-tools: Bash(python *chatwork.py* fetch *), Bash(python *backlog.py* fetch *)
+allowed-tools: Bash(python "${CLAUDE_SKILL_DIR}/scripts/chatwork.py" fetch *), Bash(python "${CLAUDE_SKILL_DIR}/scripts/backlog.py" fetch *)
 ---
 
 # Handle a request
@@ -72,7 +72,9 @@ Copy this checklist and track it:
 ### 1 Receive
 
 Run a script for every link in the request, whether the request is only the link or text that
-contains it. Execute the scripts; do not read them.
+contains it. Execute the scripts; do not read them. Run them with the Bash tool, exactly in the form
+below: only that form is pre-approved, so any other tool or form is refused when no one is there
+to approve it.
 
 - Chatwork message link (`https://www.chatwork.com/#!rid<room>-<message>`):
   `python "${CLAUDE_SKILL_DIR}/scripts/chatwork.py" fetch "<link>"`
@@ -116,6 +118,12 @@ about. If it is not, that is stop condition 3. Never search for or switch to ano
 ### 4 Act
 
 Work up to the approval line. Check the stop conditions before each step.
+
+The user often runs this skill without a screen (`req`, i.e. `claude -p`), where every tool that
+would ask for permission is refused. For code work, investigate by reading only — do not try to
+edit files, create a branch, or run git or any command other than the fetch scripts. Put the change you would make (files,
+what to change, why) in the report as a numbered item, and tell the user to continue with
+`claude -c`, where they can watch each edit. Do not look for another way around a refusal.
 
 ### 5 Report
 
