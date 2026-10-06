@@ -15,6 +15,7 @@ $links = @(
   @{ Path = "$HOME\.claude\skills\rules"; Target = "$PSScriptRoot\claude\skills\rules" }
   @{ Path = "$HOME\.claude\skills\clarify"; Target = "$PSScriptRoot\claude\skills\clarify" }
   @{ Path = "$HOME\.claude\skills\handoff"; Target = "$PSScriptRoot\claude\skills\handoff" }
+  @{ Path = "$HOME\.claude\skills\req"; Target = "$PSScriptRoot\claude\skills\req" }
   @{ Path = "$HOME\.claude\statusline-command.sh"; Target = "$PSScriptRoot\claude\statusline-command.sh" }
 )
 
