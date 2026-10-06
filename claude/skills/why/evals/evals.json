@@ -1,0 +1,37 @@
+[
+  {
+    "id": 1,
+    "skills": ["why"],
+    "query": "python -m app.main 2>&1 | why",
+    "setup": "app/config.py が os.environ[\"APP_DB_URL\"] を読み、.env を読み込む処理がない Python リポジトリ。環境変数は未設定",
+    "expected_behavior": [
+      "1 行目が【確定】で、APP_DB_URL が未設定であることを原因に挙げる",
+      "根拠に app/config.py の該当行を書く",
+      "確かめ方・直し方を PowerShell のコマンドで書く",
+      "ファイルを作ったり変えたりしない",
+      "変更の申し出で終わらない"
+    ]
+  },
+  {
+    "id": 2,
+    "skills": ["why"],
+    "query": "why <Node.js の内部の at 行と Node.js v22.14.0 だけが残ったログのパス>",
+    "setup": "空のフォルダ。ログはエラーメッセージの行より上が切れている",
+    "expected_behavior": [
+      "1 行目が【不明】で、エラーの種類とメッセージの行が切れていると書く",
+      "原因を一つに決めつけない",
+      "出力を全部取り直すコマンドを示す"
+    ]
+  },
+  {
+    "id": 3,
+    "skills": ["why"],
+    "query": "why（クリップボードに /opt/billing/batch/closing.py の TypeError: unsupported operand type(s) for +: 'int' and 'NoneType'）",
+    "setup": "請求バッチとは関係のない Python リポジトリ",
+    "expected_behavior": [
+      "2 行目の ※ で、closing.py がこのフォルダにないこと、そのリポジトリに移れば絞り込めることを書く",
+      "ほかのリポジトリを探したり、移ったりしない",
+      "日本語のログが化けずに読めている"
+    ]
+  }
+]

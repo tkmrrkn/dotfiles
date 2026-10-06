@@ -31,6 +31,7 @@ ensure_symlink "$HOME/.claude/skills/rules" "$repo/claude/skills/rules"
 ensure_symlink "$HOME/.claude/skills/clarify" "$repo/claude/skills/clarify"
 ensure_symlink "$HOME/.claude/skills/handoff" "$repo/claude/skills/handoff"
 ensure_symlink "$HOME/.claude/skills/req" "$repo/claude/skills/req"
+ensure_symlink "$HOME/.claude/skills/why" "$repo/claude/skills/why"
 ensure_symlink "$HOME/.claude/statusline-command.sh" "$repo/claude/statusline-command.sh"
 
 # ~/.bashrc に shell/bashrc の読み込みを追記（済みなら何もしない）
