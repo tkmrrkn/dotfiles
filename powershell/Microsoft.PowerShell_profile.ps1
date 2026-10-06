@@ -80,6 +80,18 @@ function trans {
   $res.translations.text
 }
 
+# === 依頼をさばく ======================================================
+# `req <リンク または 文字列>` で、今いるフォルダで /req を画面なしで動かし、報告だけを出す。
+# コードを触る依頼は、作業したいリポジトリに移って（z）から使う。Skill はリポジトリを探さない。
+# 承認するときは `claude -c` で同じ会話を開き、投稿の文面を確かめてから番号で承認する。
+function req {
+  param(
+    [Parameter(Mandatory, Position = 0, ValueFromRemainingArguments)]
+    [string[]]$Request
+  )
+  claude -p "/req $($Request -join ' ')"
+}
+
 # === カレントディレクトリをOSプロセスCWDに同期 ==========================
 # $PWDと[Environment]::CurrentDirectoryが同期されず、外部プロセスから見たcwdが
 # 起動時のまま固定される問題（wezhtermのcwd取得等に影響）への対策。
