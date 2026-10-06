@@ -1,2 +1,6 @@
 # クイックビュー用フォルダ。画像はリポジトリに含めない
 /wezterm/assets/
+
+# Python・pytest の実行で作られるキャッシュ
+__pycache__/
+.pytest_cache/
