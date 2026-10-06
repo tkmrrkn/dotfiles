@@ -11,9 +11,11 @@ allowed-tools: Bash(python "${CLAUDE_SKILL_DIR}/scripts/chatwork.py" fetch *), B
 The user hands over a work request. Move it forward as far as you can without approval, then
 report only what needs the user's decision. Write everything the user reads in Japanese.
 
-Request: $ARGUMENTS
+Argument: $ARGUMENTS
 
-If the request is empty, ask the user for the link or the text, and stop.
+The request is the argument, or the text that follows the command in the message (piped input or
+the clipboard, passed on standard input so that line breaks and long text survive). If neither
+holds a request, ask the user for the link or the text, and stop.
 
 ## Rules for every step
 

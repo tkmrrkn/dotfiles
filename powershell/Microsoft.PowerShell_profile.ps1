@@ -81,15 +81,32 @@ function trans {
 }
 
 # === 依頼をさばく ======================================================
-# `req <リンク または 文字列>` で、今いるフォルダで /req を画面なしで動かし、報告だけを出す。
+# 今いるフォルダで /req を画面なしで動かし、報告だけを出す。依頼の渡し方は 3 通り。
+#   req <リンク>          Chatwork・Backlog のリンク
+#   req（引数なし）       別の画面でコピーした依頼の本文。クリップボードから読む
+#   <コマンド> | req      パイプで渡した本文
+# 本文は引数に埋め込まず標準入力で渡す（引数だと改行で崩れたり、長い文が切れたりするため）。
 # コードを触る依頼は、作業したいリポジトリに移って（z）から使う。Skill はリポジトリを探さない。
 # 承認するときは `claude -c` で同じ会話を開き、投稿の文面を確かめてから番号で承認する。
+# 画面なしではファイルの編集や git は許可されないので、コードの修正は調べるところで止まる。続きも `claude -c` で行う。
 function req {
   param(
-    [Parameter(Mandatory, Position = 0, ValueFromRemainingArguments)]
-    [string[]]$Request
+    [Parameter(Position = 0, ValueFromRemainingArguments)][string[]]$Request,
+    [Parameter(ValueFromPipeline)][object]$InputObject
   )
-  claude -p "/req $($Request -join ' ')"
+  begin { $lines = [System.Collections.Generic.List[string]]::new() }
+  process { if ($null -ne $InputObject) { $lines.Add([string]$InputObject) } }
+  end {
+    if ($lines.Count -gt 0) {
+      ($lines -join "`n") | claude -p '/req'
+    } elseif ($Request) {
+      claude -p "/req $($Request -join ' ')"
+    } else {
+      $clip = Get-Clipboard -Raw
+      if ([string]::IsNullOrWhiteSpace($clip)) { Write-Error 'クリップボードが空です。依頼の本文をコピーしてから実行してください。'; return }
+      $clip | claude -p '/req'
+    }
+  }
 }
 
 # === カレントディレクトリをOSプロセスCWDに同期 ==========================
