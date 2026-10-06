@@ -109,6 +109,34 @@ function req {
   }
 }
 
+# === エラーの原因を調べる ==============================================
+# 今いるフォルダで /why を画面なしで動かし、原因・根拠・確かめ方だけを出す。ファイルは変えない。
+#   npm test 2>&1 | why   … 直前のコマンドのエラー
+#   why .\logs\app.log    … ログファイル（長くても必要なところだけ読ませる）
+#   why                   … クリップボードにコピーしたエラー
+# 本文は引数ではなく標準入力で渡す。改行や引用符で壊れず、コマンドラインの長さ上限も受けないため。
+function why {
+  param(
+    [Parameter(Position = 0)][string]$Path,
+    [Parameter(ValueFromPipeline)][object]$InputObject
+  )
+  begin { $lines = [System.Collections.Generic.List[string]]::new() }
+  # 2>&1 で来る標準エラーの行は ErrorRecord なので、文字列にしてから集める
+  process { if ($null -ne $InputObject) { $lines.Add([string]$InputObject) } }
+  end {
+    if ($lines.Count -gt 0) {
+      ($lines -join "`n") | claude -p '/why'
+    } elseif ($Path) {
+      if (-not (Test-Path -LiteralPath $Path -PathType Leaf)) { Write-Error "ファイルが見つかりません: $Path"; return }
+      claude -p "/why $((Resolve-Path -LiteralPath $Path).Path)"
+    } else {
+      $clip = Get-Clipboard -Raw
+      if ([string]::IsNullOrWhiteSpace($clip)) { Write-Error 'クリップボードが空です。エラーをコピーしてから実行してください。'; return }
+      $clip | claude -p '/why'
+    }
+  }
+}
+
 # === カレントディレクトリをOSプロセスCWDに同期 ==========================
 # $PWDと[Environment]::CurrentDirectoryが同期されず、外部プロセスから見たcwdが
 # 起動時のまま固定される問題（wezhtermのcwd取得等に影響）への対策。
