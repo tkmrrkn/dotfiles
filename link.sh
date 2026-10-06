@@ -27,7 +27,6 @@ ensure_symlink "$HOME/.config/nvim" "$repo/nvim"
 ensure_symlink "$HOME/.config/lazygit/config.yml" "$repo/lazygit/config.yml"
 ensure_symlink "$HOME/.claude/CLAUDE.md" "$repo/claude/CLAUDE.md"
 # skills フォルダごとではなく skill 単位。~/.claude/skills には claude.ai 同期分（synced/）も入るため。
-ensure_symlink "$HOME/.claude/skills/rules" "$repo/claude/skills/rules"
 ensure_symlink "$HOME/.claude/skills/clarify" "$repo/claude/skills/clarify"
 ensure_symlink "$HOME/.claude/skills/handoff" "$repo/claude/skills/handoff"
 ensure_symlink "$HOME/.claude/skills/req" "$repo/claude/skills/req"
