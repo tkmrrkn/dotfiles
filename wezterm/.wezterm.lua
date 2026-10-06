@@ -202,13 +202,6 @@ config.keys = {
 			},
 		}),
 	},
-
-	-- --- comm-ai の AI 整理画面（F2）: 新規タブで開き、終了したらタブも閉じる ---
-	{
-		key = "F2",
-		mods = "NONE",
-		action = act.SpawnCommandInNewTab({ args = { "comm-ai", "tui" } }),
-	},
 }
 
 -- === ワークスペース: 開く/切替を1つの一覧に統合（Ctrl+Space → w）=====

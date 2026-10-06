@@ -14,7 +14,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from urllib.request import Request, urlopen
 
-# Chatwork・Backlog の API はふだん 1 秒以内に返る。comm-ai と同じ 10 秒で打ち切り、待たせ続けない
+# Chatwork・Backlog の API はふだん 1 秒以内に返る。10 秒で打ち切り、待たせ続けない
 TIMEOUT_SECONDS = 10
 JST = timezone(timedelta(hours=9))
 
