@@ -10,7 +10,9 @@
             "!Module"
         ],
         "editor.formatOnType": true,
-        "editor.wordBasedSuggestions": "off"
+        "editor.wordBasedSuggestions": "off",
+        "editor.defaultFormatter": "charliermarsh.ruff",
+        "editor.formatOnSave": true
     },
     "claudeCode.preferredLocation": "panel",
     "remote.autoForwardPortsSource": "hybrid",
@@ -22,7 +24,8 @@
         }
     ],
     "[sql]": {
-        "editor.defaultFormatter": "adpyke.vscode-sql-formatter"
+        "editor.defaultFormatter": "sqlfluff.vscode-sqlfluff",
+        "editor.formatOnSave": true
     },
     "claudeCode.initialPermissionMode": "plan",
     "claudeCode.useCtrlEnterToSend": true,
@@ -37,5 +40,19 @@
         "jk": {
             "command": "vscode-neovim.escape"
         }
-    }
+    },
+    "[lua]": {
+        "editor.defaultFormatter": "JohnnyMorganz.stylua",
+        "editor.formatOnSave": true
+    },
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true
+    },
+    "python.languageServer": "None",
+    "basedpyright.analysis.typeCheckingMode": "standard"
 }
