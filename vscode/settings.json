@@ -54,5 +54,6 @@
         "editor.formatOnSave": true
     },
     "python.languageServer": "None",
-    "basedpyright.analysis.typeCheckingMode": "standard"
+    "basedpyright.analysis.typeCheckingMode": "standard",
+    "oil-code.disableVimKeymaps": true
 }

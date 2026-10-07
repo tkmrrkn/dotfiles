@@ -21,6 +21,27 @@ if vim.g.vscode then
 
   vim.keymap.set("n", "<leader>rn", action("editor.action.rename"), { desc = "リネーム" })
   vim.keymap.set("n", "<leader>ca", action("editor.action.quickFix"), { desc = "コードアクション" })
+
+  -- oil.nvim は VSCode で動かないため、oil.nvim を真似た拡張 oil.code を同じキーで呼ぶ。
+  vim.keymap.set("n", "-", action("oil-code.open"), { desc = "親ディレクトリを開く(oil.code)" })
+  vim.api.nvim_create_autocmd("FileType", {
+    pattern = "oil",
+    callback = function(event)
+      local map = function(keys, name, desc)
+        vim.keymap.set("n", keys, action(name), { buffer = event.buf, desc = desc })
+      end
+
+      map("-", "oil-code.openParent", "親ディレクトリへ")
+      map("_", "oil-code.openCwd", "作業ディレクトリへ")
+      map("`", "oil-code.cd", "作業ディレクトリを変更")
+      map("<CR>", "oil-code.select", "開く")
+      map("<C-s>", "oil-code.selectVertical", "左右に分割して開く")
+      map("<C-t>", "oil-code.selectTab", "新しいタブで開く")
+      map("<C-p>", "oil-code.preview", "プレビュー")
+      map("<C-l>", "oil-code.refresh", "再読み込み")
+      map("g?", "oil-code.help", "ヘルプ")
+    end,
+  })
   return
 end
 

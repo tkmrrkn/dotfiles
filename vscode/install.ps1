@@ -10,10 +10,11 @@ code --install-extension dustypomerleau.rust-syntax
 code --install-extension eamodio.gitlens
 code --install-extension esbenp.prettier-vscode
 code --install-extension golang.go
+code --install-extension growthjack.claude-code-usage
+code --install-extension haphazarddev.oil-code
 code --install-extension janisdd.vscode-edit-csv
 code --install-extension jetbrains.kotlin-server
 code --install-extension johnnymorganz.stylua
-code --install-extension long-kudo.vscode-claude-status
 code --install-extension mechatroner.rainbow-csv
 code --install-extension ms-azuretools.vscode-containers
 code --install-extension ms-python.debugpy
