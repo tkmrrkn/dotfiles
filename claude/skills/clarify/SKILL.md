@@ -1,7 +1,9 @@
 ---
 name: clarify
-description: Use when the user signals they are not following you — "何を言っているかわからない", "話がよくわからない", "それってどういう意味？" — or asks for something to be explained again. Re-explains, after first checking that you are answering the question they actually asked.
+description: Re-explains what the user did not follow, after first checking that it answers the question they actually asked. Use when the user signals they are not following you — "何を言っているかわからない", "話がよくわからない", "それってどういう意味？" — or asks for something to be explained again.
 ---
+
+# Re-explain
 
 The user does not follow what you just said.
 

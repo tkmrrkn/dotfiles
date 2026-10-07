@@ -1,7 +1,9 @@
 ---
 name: handoff
-description: Carry one piece of work across session boundaries. Use before closing a session on a large task so the next one can continue — "セッションを分けたい", "引き継ぎを残して", "一旦切る", "コンテキストが重い" — and at the start of a session to pick that work back up — "続きをやる", "前回の続き". Writes and reads one short handoff note per repository.
+description: Carries one piece of work across session boundaries. Use before closing a session on a large task so the next one can continue — "セッションを分けたい", "引き継ぎを残して", "一旦切る", "コンテキストが重い" — and at the start of a session to pick that work back up — "続きをやる", "前回の続き". Writes and reads one short handoff note per repository.
 ---
+
+# Hand off work across sessions
 
 A large task loses accuracy as the context fills up. Split it across sessions instead: leave a
 short handoff note before closing one, and start the next from that note alone.
