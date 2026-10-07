@@ -27,6 +27,8 @@ Rules:
 
 - The first line states the status, one of 【完了】【判断待ち】【停止】. Write 不明 for an unknown
   requester or deadline; never guess them.
+  A date in the request is not its deadline unless the text says so: for 「金曜の会議の資料を見て
+  おいてもらえますか」, write 期限 不明, and put "before Friday's meeting" under ■ 結果 as an inference.
 - 【完了】 means nothing needs the user. Omit ■ ご判断いただきたいこと.
 - Every item under ■ ご判断いただきたいこと carries a recommendation and its reason, so the user can
   answer with one word. Number the items; the user approves by number.

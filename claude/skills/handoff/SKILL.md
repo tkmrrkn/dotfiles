@@ -34,13 +34,14 @@ removal and `git clean -fdx`.
 
 ## Reading
 
-1. List `~/.claude/projects/<slug>/plans/*.md` and find those whose header says
-   `Status: in-progress`.
+1. Grep `~/.claude/projects/<slug>/plans/*.md` for the `# ` title and `Status:` lines, and find
+   the notes marked `Status: in-progress`. Do not open the notes yet.
 2. None — say so, and offer to start a note for the work at hand. One — read it. Several — list
    their titles and ask which.
 3. Read the files named under 次の一手, and nothing else.
-4. Report in Japanese what the work is, where it stopped, and what comes next — a few lines.
-   Confirm the next action before touching anything.
+4. Only after reading those files, report in Japanese what the work is, where it stopped, and what
+   comes next — a few lines. Then end your reply and wait for the user to confirm the next action.
+   Change nothing before that.
 
 Never rebuild context from the previous session's transcript, and never re-explore the codebase to
 fill a gap the note left. If the note was not enough to continue from, that is a defect in the
@@ -81,6 +82,8 @@ Updated: 2026-09-02
 
 Rules for filling it in:
 
+- Keep the header lines exactly as in the template: `Repo:`, `Branch:`, `Status: in-progress` or
+  `Status: done`, and `Updated:` stay in English. Reading finds notes by these words.
 - 次の一手 always names the files to read first. The next session must not begin by searching.
 - 現在の状態 carries only what you actually ran, with its real output. Anything unverified belongs
   under 未解決・注意点 — never state an untested change as done.

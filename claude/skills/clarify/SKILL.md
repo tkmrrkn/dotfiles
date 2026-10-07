@@ -12,9 +12,12 @@ The user does not follow what you just said.
 ## Steps
 
 1. Summarise in one sentence what you have been explaining up to now.
-2. State, in one sentence, your own reading of what the user actually wants to know.
-3. Check whether those two match.
-4. Where they may not match, confirm it rather than filling in the gap yourself.
+2. State, in one sentence, your own reading of what the user actually wants to know. Go back to the
+   question they first asked, not only their latest message.
+3. Check whether those two match. Steps 1–3 take one or two lines of the reply in all; give them
+   no headings.
+4. Where they may not match, still re-explain along the most likely reading, and confirm only the
+   part that stays unclear. Never fill that part in yourself.
 5. Rebuild the explanation in this order:
    - the conclusion
    - why it follows
@@ -22,7 +25,8 @@ The user does not follow what you just said.
    - what to do in this particular case
 6. Keep fact, inference and proposal clearly apart.
 7. Cut unnecessary jargon, abstract phrasing and side discussions.
-8. Where an earlier explanation was wrong or imprecise, correct it explicitly.
+8. Where an earlier explanation was wrong or imprecise, correct it explicitly, in the same plain
+   words as the rest.
 
 ## Watch for
 

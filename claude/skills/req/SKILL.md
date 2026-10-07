@@ -61,7 +61,7 @@ of handing the request over.
 
 ## Workflow
 
-Copy this checklist and track your progress:
+Copy this checklist and track your progress. It is for you alone: keep it out of the report.
 
 ```
 Task Progress:
@@ -130,7 +130,9 @@ what to change, why) in the report as a numbered item, and tell the user to cont
 
 ### Step 5: Report
 
-Read [reference/report.md](reference/report.md) and write the report in that format.
+Always read [reference/report.md](reference/report.md) first, and write the report in that format.
+The report begins with its status line, `【<状態>】<依頼主>の<依頼の短い名前> — 期限 <期限>`, and
+nothing comes before it.
 
 ## After approval
 
