@@ -1,6 +1,29 @@
 vim.keymap.set("i", "jk", "<Esc>", { desc = "Escの代替" })
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>", { desc = "検索ハイライトを消す" })
 
+-- VSCode（vscode-neovim）では、ウィンドウ操作と LSP を VSCode のコマンドに振り替える。
+-- gd・K・gr・gc は vscode-neovim が最初から VSCode のコマンドに割り当てている。
+if vim.g.vscode then
+  local vscode = require("vscode")
+  local function action(name)
+    return function()
+      vscode.action(name)
+    end
+  end
+
+  vim.keymap.set("n", "<C-h>", action("workbench.action.navigateLeft"), { desc = "左のエディタグループへ移動" })
+  vim.keymap.set("n", "<C-j>", action("workbench.action.navigateDown"), { desc = "下のエディタグループへ移動" })
+  vim.keymap.set("n", "<C-k>", action("workbench.action.navigateUp"), { desc = "上のエディタグループへ移動" })
+  vim.keymap.set("n", "<C-l>", action("workbench.action.navigateRight"), { desc = "右のエディタグループへ移動" })
+
+  vim.keymap.set("n", "<leader>sv", action("workbench.action.splitEditorRight"), { desc = "左右に分割" })
+  vim.keymap.set("n", "<leader>sh", action("workbench.action.splitEditorDown"), { desc = "上下に分割" })
+
+  vim.keymap.set("n", "<leader>rn", action("editor.action.rename"), { desc = "リネーム" })
+  vim.keymap.set("n", "<leader>ca", action("editor.action.quickFix"), { desc = "コードアクション" })
+  return
+end
+
 local smart_splits = require("smart-splits")
 vim.keymap.set("n", "<C-h>", smart_splits.move_cursor_left, { desc = "左のウィンドウ/ペインへ移動" })
 vim.keymap.set("n", "<C-j>", smart_splits.move_cursor_down, { desc = "下のウィンドウ/ペインへ移動" })

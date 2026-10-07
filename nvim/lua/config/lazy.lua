@@ -27,6 +27,12 @@ require("lazy").setup({
     -- import your plugins
     { import = "plugins" },
   },
+  -- VSCode（vscode-neovim）では画面まわりを VSCode に任せ、vscode = true を付けた編集用プラグインだけ読み込む
+  defaults = {
+    cond = function(plugin)
+      return not vim.g.vscode or plugin.vscode
+    end,
+  },
   -- Configure any other settings here. See the documentation for more details.
   -- colorscheme that will be used when installing plugins.
   install = { colorscheme = { "habamax" } },
