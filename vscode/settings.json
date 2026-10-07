@@ -1,0 +1,41 @@
+{
+    "workbench.colorTheme": "Kanagawa",
+    "notebook.lineNumbers": "on",
+    "workbench.secondarySideBar.defaultVisibility": "hidden",
+    "terminal.integrated.defaultProfile.windows": "Command Prompt",
+    "[python]": {
+        "diffEditor.ignoreTrimWhitespace": false,
+        "editor.defaultColorDecorators": "never",
+        "gitlens.codeLens.symbolScopes": [
+            "!Module"
+        ],
+        "editor.formatOnType": true,
+        "editor.wordBasedSuggestions": "off"
+    },
+    "claudeCode.preferredLocation": "panel",
+    "remote.autoForwardPortsSource": "hybrid",
+    "editor.renderWhitespace": "all",
+    "mssql.connectionGroups": [
+        {
+            "name": "ROOT",
+            "id": "ROOT"
+        }
+    ],
+    "[sql]": {
+        "editor.defaultFormatter": "adpyke.vscode-sql-formatter"
+    },
+    "claudeCode.initialPermissionMode": "plan",
+    "claudeCode.useCtrlEnterToSend": true,
+    "workbench.panel.defaultLocation": "right",
+    "gitlens.mode.active": "review",
+    "editor.fontSize": 17,
+    "claudeCode.hideOnboarding": true,
+    "extensions.experimental.affinity": {
+        "asvetliakov.vscode-neovim": 1
+    },
+    "vscode-neovim.compositeKeys": {
+        "jk": {
+            "command": "vscode-neovim.escape"
+        }
+    }
+}

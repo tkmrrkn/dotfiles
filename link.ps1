@@ -10,6 +10,8 @@ $links = @(
   @{ Path = "$HOME\.sqlfluff";        Target = "$PSScriptRoot\sqlfluff\.sqlfluff" }
   # ディレクトリごとではなくファイル単位。lazygit が同じ場所に state.yml を書くため。
   @{ Path = "$env:LOCALAPPDATA\lazygit\config.yml"; Target = "$PSScriptRoot\lazygit\config.yml" }
+  # Code\User ごとではなくファイル単位。VSCode が同じ場所に globalStorage や履歴を書くため。
+  @{ Path = "$env:APPDATA\Code\User\settings.json"; Target = "$PSScriptRoot\vscode\settings.json" }
   @{ Path = "$HOME\.claude\CLAUDE.md"; Target = "$PSScriptRoot\claude\CLAUDE.md" }
   # skills フォルダごとではなく skill 単位。~/.claude/skills には claude.ai 同期分（synced/）も入るため。
   @{ Path = "$HOME\.claude\skills\clarify"; Target = "$PSScriptRoot\claude\skills\clarify" }

@@ -10,6 +10,7 @@ dotfiles/
 ├── link.sh          # 同上／WSL（~/.bashrc への読み込み追記も行う）
 ├── wezterm/         # WezTerm 設定
 ├── nvim/            # Neovim 設定（Windows/WSL 共通、symlink で共有）
+├── vscode/          # VSCode 設定と拡張機能一覧／Windows
 ├── powershell/      # PowerShell プロファイル
 ├── shell/           # WSL 用 bash 設定
 ├── oh-my-posh/      # プロンプトテーマ
@@ -68,6 +69,7 @@ PATH を反映するため、pwsh を開き直す。
 ```powershell
 ./pnpm/install.ps1
 ./tools/install.ps1
+./vscode/install.ps1
 ```
 
 ### 4. 設定ファイルを symlink
@@ -75,6 +77,9 @@ PATH を反映するため、pwsh を開き直す。
 ```powershell
 ./link.ps1   # 冪等・再実行可
 ```
+
+VSCode の設定画面で変更すると、symlink 先の `vscode/settings.json` が書き換わる。
+コミット前に `git diff` で意図した変更か確認する。
 
 ### 5. キーリマップを適用
 

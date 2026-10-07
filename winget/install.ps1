@@ -1,5 +1,6 @@
 winget install --id wez.wezterm -e
 winget install --id Neovim.Neovim -e
+winget install --id Microsoft.VisualStudioCode -e
 winget install --id Microsoft.PowerShell -e
 winget install --id BurntSushi.ripgrep.MSVC -e
 winget install --id DEVCOM.JetBrainsMonoNerdFont -e
