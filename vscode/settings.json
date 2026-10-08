@@ -20,6 +20,8 @@
     "claudeCode.preferredLocation": "panel",
     "remote.autoForwardPortsSource": "hybrid",
     "editor.renderWhitespace": "all",
+    "editor.smoothScrolling": true,
+    "editor.guides.bracketPairs": "active",
     "mssql.connectionGroups": [
         {
             "name": "ROOT",

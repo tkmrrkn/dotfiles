@@ -39,4 +39,5 @@ code --install-extension sqlfluff.vscode-sqlfluff
 code --install-extension streetsidesoftware.code-spell-checker
 code --install-extension sumneko.lua
 code --install-extension tamasfe.even-better-toml
+code --install-extension usernamehw.errorlens
 code --install-extension yzane.markdown-pdf
