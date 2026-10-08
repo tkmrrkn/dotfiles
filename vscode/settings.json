@@ -32,6 +32,8 @@
     "workbench.panel.defaultLocation": "right",
     "gitlens.mode.active": "review",
     "editor.fontSize": 17,
+    "editor.lineNumbers": "relative",
+    "zenMode.hideLineNumbers": false,
     "claudeCode.hideOnboarding": true,
     "extensions.experimental.affinity": {
         "asvetliakov.vscode-neovim": 1
