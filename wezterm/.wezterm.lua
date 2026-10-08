@@ -62,7 +62,33 @@ local act = wezterm.action
 local quickview_image = wezterm.home_dir .. "\\dotfiles\\wezterm\\assets\\F1.png"
 
 -- === メモ ===========================================================
-local scratch_file = wezterm.home_dir .. "\\scratch.md"
+-- F2でペインのいるリポジトリのルート直下に置く。Gitに追跡させないよう ~/.config/git/ignore に載せている。
+local memo_name = ".memo.md"
+
+-- ペインの実カレントディレクトリをWindows形式で返す。
+-- get_foreground_process_info() でOSに直接フォアグラウンドプロセスの実cwdを問い合わせる。
+-- OSC7（oh-my-posh側で "pwd": "osc7" 有効化済み）だけに頼ると、WezTermがホスト名不一致等を理由に
+-- cwd更新を無視し続け、常にペイン起動時の初期ディレクトリが返る不具合があったため、
+-- get_foreground_process_infoを優先し、取得できない場合のみOSC7にフォールバックする。
+local function pane_cwd(pane)
+	local path
+
+	-- 優先: OSに直接問い合わせるので常に正確（OSC7のホスト名検証などに影響されない）
+	local proc = pane:get_foreground_process_info()
+	if proc and proc.cwd then
+		path = proc.cwd
+	else
+		-- フォールバック: OSC7経由。file_pathは "/C:/Users/..." 形式
+		local cwd = pane:get_current_working_dir()
+		if cwd then
+			path = cwd.file_path
+		end
+	end
+
+	if path then
+		return (path:gsub("^/(%a:)", "%1"):gsub("/", "\\"))
+	end
+end
 
 -- === smart-splits.nvim連携: Ctrl+hjklでnvimの分割とweztermのペインを継ぎ目なく移動 ===
 -- nvim側がsmart-splits.nvimでユーザー変数 IS_NVIM を自動セット/解除してくれるので、
@@ -153,30 +179,12 @@ config.keys = {
 	},
 
 	-- --- カレントディレクトリをエクスプローラで開く（LEADER + e）---
-	-- get_foreground_process_info() でOSに直接フォアグラウンドプロセスの実cwdを問い合わせる。
-	-- OSC7（oh-my-posh側で "pwd": "osc7" 有効化済み）だけに頼ると、WezTermがホスト名不一致等を理由に
-	-- cwd更新を無視し続け、常にペイン起動時の初期ディレクトリが開かれてしまう不具合があったため、
-	-- get_foreground_process_infoを優先し、取得できない場合のみOSC7ベースの旧方式にフォールバックする。
 	{
 		key = "e",
 		mods = "LEADER",
 		action = wezterm.action_callback(function(window, pane)
-			local path
-
-			-- 優先: OSに直接問い合わせるので常に正確（OSC7のホスト名検証などに影響されない）
-			local proc = pane:get_foreground_process_info()
-			if proc and proc.cwd then
-				path = proc.cwd
-			else
-				-- フォールバック: OSC7経由。file_pathは "/C:/Users/..." 形式
-				local cwd = pane:get_current_working_dir()
-				if cwd then
-					path = cwd.file_path
-				end
-			end
-
+			local path = pane_cwd(pane)
 			if path then
-				path = path:gsub("^/(%a:)", "%1"):gsub("/", "\\")
 				wezterm.background_child_process({ "explorer.exe", path })
 			end
 		end),
@@ -201,6 +209,28 @@ config.keys = {
 					.. "' }",
 			},
 		}),
+	},
+
+	-- --- メモ（F2）: ペインのいるリポジトリのルート直下の .memo.md を新規タブのnvimで開く ---
+	-- リポジトリの外ではホームディレクトリに置く。
+	{
+		key = "F2",
+		mods = "NONE",
+		action = wezterm.action_callback(function(window, pane)
+			local root = wezterm.home_dir
+			local cwd = pane_cwd(pane)
+			if cwd then
+				local ok, stdout = wezterm.run_child_process({ "git", "-C", cwd, "rev-parse", "--show-toplevel" })
+				if ok and stdout ~= "" then
+					root = stdout:gsub("%s+$", ""):gsub("/", "\\")
+				end
+			end
+			-- dotfiles配下のnvimディレクトリを実行ファイルと誤解決させないため拡張子まで書く
+			window:perform_action(
+				act.SpawnCommandInNewTab({ cwd = root, args = { "nvim.exe", root .. "\\" .. memo_name } }),
+				pane
+			)
+		end),
 	},
 }
 
@@ -281,7 +311,7 @@ wezterm.on("workspace-launcher", function(window, pane)
 	)
 end)
 
--- === 起動時の定位置: dotfilesシェル + メモ ==========================
+-- === 起動時の定位置: dotfilesシェル ================================
 -- defaultワークスペースに置く。リポジトリを開く前の起点をここが兼ねる。
 wezterm.on("gui-startup", function(cmd)
 	-- gui-startupを定義するとコマンドライン指定は無視されるため、cmdがあれば明示的に開く。
@@ -291,15 +321,10 @@ wezterm.on("gui-startup", function(cmd)
 		return
 	end
 
-	local dotfiles_tab, _, win = wezterm.mux.spawn_window({
+	wezterm.mux.spawn_window({
 		cwd = wezterm.home_dir .. "\\dotfiles",
 		args = { "pwsh.exe", "-NoLogo" },
 	})
-
-	-- dotfiles配下のnvimディレクトリを実行ファイルと誤解決させないため拡張子まで書く
-	win:spawn_tab({ cwd = wezterm.home_dir, args = { "nvim.exe", scratch_file } })
-
-	dotfiles_tab:activate()
 end)
 
 -- === Claude Code ステータス =========================================
