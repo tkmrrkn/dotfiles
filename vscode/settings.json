@@ -3,7 +3,10 @@
     "notebook.lineNumbers": "on",
     "workbench.secondarySideBar.defaultVisibility": "hidden",
     "terminal.integrated.defaultProfile.windows": "Command Prompt",
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
     "[python]": {
+        "editor.tabSize": 4,
         "diffEditor.ignoreTrimWhitespace": false,
         "editor.defaultColorDecorators": "never",
         "gitlens.codeLens.symbolScopes": [
@@ -24,6 +27,7 @@
         }
     ],
     "[sql]": {
+        "editor.tabSize": 4,
         "editor.defaultFormatter": "sqlfluff.vscode-sqlfluff",
         "editor.formatOnSave": true
     },
@@ -42,6 +46,12 @@
         "jk": {
             "command": "vscode-neovim.escape"
         }
+    },
+    "[kotlin]": {
+        "editor.tabSize": 4
+    },
+    "[rust]": {
+        "editor.tabSize": 4
     },
     "[lua]": {
         "editor.defaultFormatter": "JohnnyMorganz.stylua",
