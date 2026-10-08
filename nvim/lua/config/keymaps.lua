@@ -22,6 +22,23 @@ if vim.g.vscode then
   vim.keymap.set("n", "<leader>rn", action("editor.action.rename"), { desc = "リネーム" })
   vim.keymap.set("n", "<leader>ca", action("editor.action.quickFix"), { desc = "コードアクション" })
 
+  -- VSCode で読み込まないプラグイン（telescope・gitsigns・diffview・quicker）のキーは、同じ働きの VSCode のコマンドに振り替える。
+  vim.keymap.set("n", "<leader>ff", action("workbench.action.quickOpen"), { desc = "ファイル検索" })
+  vim.keymap.set("n", "<leader>fg", action("workbench.action.findInFiles"), { desc = "全文検索" })
+  vim.keymap.set("n", "<leader>fb", action("workbench.action.showAllEditors"), { desc = "開いているエディタ一覧" })
+
+  vim.keymap.set("n", "]c", action("workbench.action.editor.nextChange"), { desc = "次のハンク" })
+  vim.keymap.set("n", "[c", action("workbench.action.editor.previousChange"), { desc = "前のハンク" })
+  vim.keymap.set({ "n", "x" }, "<leader>hs", action("git.stageSelectedRanges"), { desc = "ハンクをstage" })
+  vim.keymap.set({ "n", "x" }, "<leader>hr", action("git.revertSelectedRanges"), { desc = "ハンクをreset" })
+  vim.keymap.set("n", "<leader>hp", action("editor.action.dirtydiff.next"), { desc = "ハンクをプレビュー" })
+  vim.keymap.set("n", "<leader>tb", action("gitlens.toggleLineBlame"), { desc = "行blame表示をトグル" })
+
+  vim.keymap.set("n", "<leader>gd", action("workbench.view.scm"), { desc = "変更の一覧を開く" })
+  vim.keymap.set("n", "<leader>gh", action("gitlens.showQuickFileHistory"), { desc = "現在のファイルの履歴" })
+
+  vim.keymap.set("n", "<leader>q", action("workbench.actions.view.toggleProblems"), { desc = "問題パネルをトグル" })
+
   -- oil.nvim は VSCode で動かないため、oil.nvim を真似た拡張 oil.code を同じキーで呼ぶ。
   vim.keymap.set("n", "-", action("oil-code.open"), { desc = "親ディレクトリを開く(oil.code)" })
   vim.api.nvim_create_autocmd("FileType", {
