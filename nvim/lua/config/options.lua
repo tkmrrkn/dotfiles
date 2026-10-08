@@ -1,3 +1,6 @@
+-- Python 連携を使うプラグインがなく、pyenv-win の shim を起動できずエラーになるため切る。
+vim.g.loaded_python3_provider = 0
+
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.expandtab = true
