@@ -72,5 +72,8 @@
     "oil-code.disableVimKeymaps": true,
     "Lua.diagnostics.globals": [
         "vim"
+    ],
+    "cSpell.userWords": [
+        "tkmrrkn"
     ]
 }
