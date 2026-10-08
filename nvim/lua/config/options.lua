@@ -18,6 +18,10 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 vim.opt.clipboard = "unnamedplus"
 
+-- VSCode（editor.renderWhitespace: all）と同じく、空白を記号で見えるようにする。
+vim.opt.list = true
+vim.opt.listchars = { space = "·", tab = "» ", trail = "·", nbsp = "␣" }
+
 vim.diagnostic.config({
   virtual_text = true,
   underline = true,
