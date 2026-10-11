@@ -14,6 +14,7 @@ $links = @(
   @{ Path = "$env:APPDATA\Code\User\settings.json"; Target = "$PSScriptRoot\vscode\settings.json" }
   @{ Path = "$HOME\.claude\CLAUDE.md"; Target = "$PSScriptRoot\claude\CLAUDE.md" }
   # skills フォルダごとではなく skill 単位。~/.claude/skills には claude.ai 同期分（synced/）も入るため。
+  @{ Path = "$HOME\.claude\skills\buy"; Target = "$PSScriptRoot\claude\skills\buy" }
   @{ Path = "$HOME\.claude\skills\clarify"; Target = "$PSScriptRoot\claude\skills\clarify" }
   @{ Path = "$HOME\.claude\skills\handoff"; Target = "$PSScriptRoot\claude\skills\handoff" }
   @{ Path = "$HOME\.claude\skills\req"; Target = "$PSScriptRoot\claude\skills\req" }
