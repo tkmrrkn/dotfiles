@@ -1,7 +1,6 @@
 ---
 name: buy
 description: Compares products and recommends the one that fits the user's actual use, by building the evaluation criteria from their requirements and reading what buyers actually report instead of trusting star averages. Use this whenever the user is working out what to buy — 「〜を探している」「どれがいい」「比較して」「買い替えたい」「おすすめある？」「〜ってどう？」「安いのないかな」— or names a product or a product category they might purchase, even when they never ask for a comparison and even when they mention only one product. It covers any genre, such as appliances, kitchenware, furniture, PC peripherals, tools, daily goods. It does not cover choosing software libraries, cloud services, or dependencies for a codebase.
-argument-hint: "[商品ジャンルや条件]"
 ---
 
 # Compare products and recommend one
