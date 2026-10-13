@@ -83,6 +83,34 @@ try {
   # Stop フックの結果で Claude が続行している最中は通知しない
   if ($payload.stop_hook_active) { exit 0 }
 
+  # バックグラウンドのサブエージェントやコマンドの完了を待つ間にもターンが終わって Stop が来るため、
+  # 今のターン（最後の人間の発言以降）で起動して、まだ完了通知が来ていない作業があれば出さない。
+  # 以前のターンから動き続ける開発サーバーなどで通知がずっと止まらないよう、今のターンの分だけを見る。
+  # 記録を読めなかったときは通知する（消えるより余分に出るほうがまし）。
+  if ($payload.hook_event_name -eq 'Stop' -and $payload.transcript_path) {
+    try {
+      $lines = [System.IO.File]::ReadAllLines($payload.transcript_path, [System.Text.Encoding]::UTF8)
+      $start = 0
+      for ($i = $lines.Count - 1; $i -ge 0; $i--) {
+        if ($lines[$i].Contains('"origin":{"kind":"human"}')) { $start = $i; break }
+      }
+      # ツール結果の構造化された項目だけを見る。ツールの出力本文に同じ文字列があっても、
+      # そちらは引用符がエスケープされて記録されるので取り違えない。
+      $launched = @{}
+      $finished = @{}
+      for ($i = $start; $i -lt $lines.Count; $i++) {
+        $line = $lines[$i]
+        # バックグラウンドに回したコマンド（時間切れで回ったものも含む）
+        if ($line -match '"backgroundTaskId":"(\w+)"') { $launched[$Matches[1]] = $true }
+        # バックグラウンドで起動したサブエージェント
+        if ($line.Contains('"status":"async_launched"') -and $line -match '"agentId":"(\w+)"') { $launched[$Matches[1]] = $true }
+        # 完了通知（完了・失敗・停止のいずれも）
+        if ($line.Contains('"origin":{"kind":"task-notification"') -and $line -match '<task-id>(\w+)</task-id>') { $finished[$Matches[1]] = $true }
+      }
+      if (@($launched.Keys | Where-Object { -not $finished.ContainsKey($_) }).Count -gt 0) { exit 0 }
+    } catch {}
+  }
+
   $folder = if ($payload.cwd) { Split-Path $payload.cwd -Leaf } else { '' }
   if ($folder -and [ClaudeNotifyWin32]::IsForegroundVSCodeOf($folder)) { exit 0 }
 
