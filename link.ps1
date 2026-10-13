@@ -19,6 +19,9 @@ $links = @(
   @{ Path = "$HOME\.claude\skills\req"; Target = "$PSScriptRoot\claude\skills\req" }
   @{ Path = "$HOME\.claude\skills\why"; Target = "$PSScriptRoot\claude\skills\why" }
   @{ Path = "$HOME\.claude\statusline-command.sh"; Target = "$PSScriptRoot\claude\statusline-command.sh" }
+  # hooks フォルダごとではなくファイル単位。~/.claude/hooks にはこのマシン専用のフックも置くため。
+  @{ Path = "$HOME\.claude\hooks\notify.ps1"; Target = "$PSScriptRoot\claude\hooks\notify.ps1" }
+  @{ Path = "$HOME\.claude\hooks\notify-focus.vbs"; Target = "$PSScriptRoot\claude\hooks\notify-focus.vbs" }
 )
 
 # 作成すべきリンクが残っている場合のみ、symlink 作成権限（開発者モード or 管理者）を要求。
