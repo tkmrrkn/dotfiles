@@ -23,13 +23,77 @@ config.window_padding = { left = 6, right = 6, top = 4, bottom = 4 }
 config.adjust_window_size_when_changing_font_size = false
 
 -- === タブバー =======================================================
+-- OSのタイトルバーを消し、タブバーにウィンドウのボタン(最小化/最大化/閉じる)を同居させる。
+-- ボタンとドラッグ移動の置き場所がタブバーになるので、タブが1つでも常に出す。
+-- レトロ式のタブバーだとボタンが崩れて描画されるため、ファンシー式にする。
+-- タブごとの×は 20240203 版では消せない(show_close_tab_button_in_tabs は未対応)。
+config.window_decorations = "INTEGRATED_BUTTONS|RESIZE"
 config.use_fancy_tab_bar = true
-config.hide_tab_bar_if_only_one_tab = true
+config.hide_tab_bar_if_only_one_tab = false
 config.tab_bar_at_bottom = false
+config.show_new_tab_button_in_tab_bar = false
+config.tab_max_width = 24
 
--- タブ名は番号だけにする。プロセス名やパスが出ても識別に使えないため。
+-- Kanagawa Wave。アクティブなタブだけをWindowsのアクセント(crystalBlue)の丸いピルで塗る。
+local tab_colors = {
+	bar = "#16161D", -- sumiInk0
+	active = "#7E9CD8", -- crystalBlue
+	inactive_fg = "#727169", -- fujiGray
+	hover_fg = "#DCD7BA", -- fujiWhite
+}
+
+config.window_frame = {
+	font = wezterm.font({ family = "JetBrainsMono Nerd Font", weight = "Bold" }),
+	font_size = 10.5,
+	active_titlebar_bg = tab_colors.bar,
+	inactive_titlebar_bg = tab_colors.bar,
+}
+
+config.colors = {
+	tab_bar = {
+		active_tab = { bg_color = tab_colors.bar, fg_color = tab_colors.active },
+		inactive_tab = { bg_color = tab_colors.bar, fg_color = tab_colors.inactive_fg },
+		inactive_tab_hover = { bg_color = tab_colors.bar, fg_color = tab_colors.hover_fg },
+		inactive_tab_edge = tab_colors.bar,
+	},
+}
+
+local nf = wezterm.nerdfonts
+local process_icons = {
+	nvim = nf.custom_vim,
+	pwsh = nf.md_powershell,
+	powershell = nf.md_powershell,
+	wsl = nf.linux_tux,
+}
+local default_process_icon = nf.dev_terminal
+
+-- タブ名は番号とプロセスのアイコンだけにする。プロセス名やパスが出ても識別に使えないため。
+-- nvimはsmart-splits.nvimが立てるIS_NVIMで見る(プロセス名は親のpwshが返ることがあるため)。
+local function tab_icon(pane)
+	if pane.user_vars.IS_NVIM == "true" then
+		return process_icons.nvim
+	end
+	local name = (pane.foreground_process_name or ""):gsub(".*[/\\]", ""):gsub("%.exe$", ""):lower()
+	return process_icons[name] or default_process_icon
+end
+
 wezterm.on("format-tab-title", function(tab)
-	return " " .. tostring(tab.tab_index + 1) .. " "
+	local zoomed = tab.active_pane.is_zoomed and " " .. nf.md_magnify or ""
+	local label = " " .. tostring(tab.tab_index + 1) .. "  " .. tab_icon(tab.active_pane) .. zoomed .. " "
+	if not tab.is_active then
+		return " " .. label .. " "
+	end
+	return {
+		{ Background = { Color = tab_colors.bar } },
+		{ Foreground = { Color = tab_colors.active } },
+		{ Text = nf.ple_left_half_circle_thick },
+		{ Background = { Color = tab_colors.active } },
+		{ Foreground = { Color = tab_colors.bar } },
+		{ Text = label },
+		{ Background = { Color = tab_colors.bar } },
+		{ Foreground = { Color = tab_colors.active } },
+		{ Text = nf.ple_right_half_circle_thick },
+	}
 end)
 
 -- === その他 =========================================================
