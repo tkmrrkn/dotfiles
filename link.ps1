@@ -17,7 +17,6 @@ $links = @(
   @{ Path = "$HOME\.claude\skills\buy"; Target = "$PSScriptRoot\claude\skills\buy" }
   @{ Path = "$HOME\.claude\skills\clarify"; Target = "$PSScriptRoot\claude\skills\clarify" }
   @{ Path = "$HOME\.claude\skills\handoff"; Target = "$PSScriptRoot\claude\skills\handoff" }
-  @{ Path = "$HOME\.claude\skills\req"; Target = "$PSScriptRoot\claude\skills\req" }
   @{ Path = "$HOME\.claude\skills\why"; Target = "$PSScriptRoot\claude\skills\why" }
   @{ Path = "$HOME\.claude\statusline-command.sh"; Target = "$PSScriptRoot\claude\statusline-command.sh" }
   # hooks フォルダごとではなくファイル単位。~/.claude/hooks にはこのマシン専用のフックも置くため。

@@ -30,7 +30,6 @@ ensure_symlink "$HOME/.claude/CLAUDE.md" "$repo/claude/CLAUDE.md"
 ensure_symlink "$HOME/.claude/skills/buy" "$repo/claude/skills/buy"
 ensure_symlink "$HOME/.claude/skills/clarify" "$repo/claude/skills/clarify"
 ensure_symlink "$HOME/.claude/skills/handoff" "$repo/claude/skills/handoff"
-ensure_symlink "$HOME/.claude/skills/req" "$repo/claude/skills/req"
 ensure_symlink "$HOME/.claude/skills/why" "$repo/claude/skills/why"
 ensure_symlink "$HOME/.claude/statusline-command.sh" "$repo/claude/statusline-command.sh"
 
